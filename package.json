@@ -1,0 +1,28 @@
+{
+  "name": "sharpen",
+  "version": "0.0.0-dev",
+  "description": "Efficient, highly customisable framework for creating powerful Discord bots based on discord.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run lint && npm run docs:test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brinkflew/sharpen.git"
+  },
+  "keywords": [
+    "discord.js",
+    "nodejs",
+    "framework",
+    "bot"
+  ],
+  "author": "Antoine Van Serveyt <antoine.van-serveyt@hotmail.be>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/brinkflew/sharpen/issues"
+  },
+  "homepage": "https://github.com/brinkflew/sharpen#readme",
+  "devDependencies": {
+    "eslint": "^4.19.0"
+  }
+}
