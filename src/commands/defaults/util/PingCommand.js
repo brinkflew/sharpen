@@ -4,7 +4,7 @@ class PingCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'ping',
-      group: 'ping',
+      group: 'util',
       memberName: 'ping',
       description: 'CMD_PING_DESCRIPTION',
       throttling: {

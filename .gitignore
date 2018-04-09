@@ -3,9 +3,5 @@ node_modules/
 package-lock.json
 
 # Tests
-test
-test/config.js
+test/config.*
 test/*.sqlite3
-
-# Miscellaneous
-.tmp/

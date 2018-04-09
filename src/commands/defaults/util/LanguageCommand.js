@@ -1,4 +1,3 @@
-const { oneLine, stripIndents } = require('common-tags');
 const Command = require('../../Command');
 
 module.exports = class PrefixCommand extends Command {
@@ -26,7 +25,7 @@ module.exports = class PrefixCommand extends Command {
   }
 
   async run(msg, args) {
-    // Just output the prefix
+    // Just output the language
     if (!args.language) {
       let lang = msg.guild ? msg.guild.lang : this.client.lang;
       lang = this.client.translator.languages.get(lang);
@@ -44,7 +43,7 @@ module.exports = class PrefixCommand extends Command {
 
     // Save the language
     const lowercase = args.language.toLowerCase();
-    const lang = args.language.toLowerCase().slice(0, 2);
+    const lang = lowercase.slice(0, 2);
     let response;
     if (lowercase === 'default') {
       if (msg.guild) msg.guild.lang = null; else this.client.lang = null;
