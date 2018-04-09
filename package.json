@@ -1,6 +1,6 @@
 {
   "name": "sharpen",
-  "version": "0.0.0-dev",
+  "version": "0.0.1-dev",
   "description": "Efficient, highly customisable framework for creating powerful Discord bots based on discord.js",
   "main": "index.js",
   "scripts": {
