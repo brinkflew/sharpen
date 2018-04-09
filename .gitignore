@@ -2,8 +2,10 @@
 node_modules/
 package-lock.json
 
-# Config / auth
-config/
+# Tests
+test
+test/config.js
+test/*.sqlite3
 
 # Miscellaneous
 .tmp/
