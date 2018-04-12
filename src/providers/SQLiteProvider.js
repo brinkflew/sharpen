@@ -96,6 +96,7 @@ class SQLiteProvider extends SettingsProvider {
     // Listen for changes
     this.listeners
       .set('commandPrefixChange', (guild, prefix) => this.set(guild, 'prefix', prefix))
+      .set('languageChange', (guild, lang) => this.set(guild, 'lang', lang))
       .set('commandStatusChange', (guild, command, enabled) => this.set(guild, `cmd-${command.name}`, enabled))
       .set('groupStatusChange', (guild, group, enabled) => this.set(guild, `grp-${group.id}`, enabled))
       .set('guildCreate', (guild) => {
@@ -182,6 +183,12 @@ class SQLiteProvider extends SettingsProvider {
     if (typeof settings.prefix !== 'undefined') {
       if (guild) guild._commandPrefix = settings.prefix;
       else this.client._commandPrefix = settings.prefix;
+    }
+
+    // Load the guild language
+    if (typeof settings.lang !== 'undefined') {
+      if (guild) guild._lang = settings.lang;
+      else this.client._lang = settings.lang;
     }
 
     // Load all command/group statuses

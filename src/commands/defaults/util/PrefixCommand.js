@@ -44,11 +44,13 @@ module.exports = class PrefixCommand extends Command {
     const prefix = lowercase === 'none' ? '' : args.prefix;
     let response;
     if (lowercase === 'default') {
-      if (msg.guild) msg.guild.commandPrefix = null; else this.client.commandPrefix = null;
+      if (msg.guild) msg.guild.commandPrefix = null;
+      else this.client.commandPrefix = null;
       const current = this.client.commandPrefix ? `\`${this.client.commandPrefix}\`` : 'no prefix';
       response = msg.translate('CMD_PREFIX_RESET', current);
     } else {
-      if (msg.guild) msg.guild.commandPrefix = prefix; else this.client.commandPrefix = prefix;
+      if (msg.guild) msg.guild.commandPrefix = prefix;
+      else this.client.commandPrefix = prefix;
       response = prefix ? msg.translate('CMD_PREFIX_SET', args.prefix) : msg.translate('CMD_PREFIX_REMOVED');
     }
 

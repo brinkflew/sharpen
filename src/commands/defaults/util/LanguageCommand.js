@@ -1,6 +1,6 @@
 const Command = require('../../Command');
 
-module.exports = class PrefixCommand extends Command {
+module.exports = class LanguageCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'language',
@@ -46,11 +46,13 @@ module.exports = class PrefixCommand extends Command {
     const lang = lowercase.slice(0, 2);
     let response;
     if (lowercase === 'default') {
-      if (msg.guild) msg.guild.lang = null; else this.client.lang = null;
+      if (msg.guild) msg.guild.lang = null;
+      else this.client.lang = null;
       const current = `\`${this.client.lang}\``;
       response = msg.translate('CMD_LANG_RESET', current);
     } else {
-      if (msg.guild) msg.guild.lang = lang; else this.client.lang = lang;
+      if (msg.guild) msg.guild.lang = lang;
+      else this.client.lang = lang;
       response = msg.translate('CMD_LANG_SET', args.language);
     }
 
