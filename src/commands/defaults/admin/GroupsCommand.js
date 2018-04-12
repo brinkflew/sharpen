@@ -19,6 +19,6 @@ module.exports = class ListGroupsCommand extends Command {
   }
 
   run(msg) {
-    return msg.reply(msg.translate('CMD_GROUPS_LIST', msg));
+    return msg.reply(msg.translate('CMD_GROUPS_LIST', this.client.registry.groups, msg));
   }
 };

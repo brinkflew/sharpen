@@ -7,10 +7,10 @@ module.exports = {
   DETAILS: () => `Only administrators may use this command.`,
 
   // Messages
-  LIST: (msg) =>
+  LIST: (groups, msg) =>
     stripIndents`
-      __**Groups**__
-      ${this.client.registry.groups.map((grp) =>
-    `**${grp.name}:** ${grp.isEnabledIn(msg.guild) ? 'Enabled' : 'Disabled'}`).join('\n')}
+      **Groups**
+      ${groups.map((grp) =>
+    `\`${grp.name}\` ${grp.isEnabledIn(msg.guild) ? 'Enabled' : 'Disabled'}`).join('\n')}
     `
 };
