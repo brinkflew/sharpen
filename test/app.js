@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 
-const commando = require('../src');
+const sharpen = require('../src');
 const path = require('path');
 const sqlite = require('sqlite');
-const token = require('./config').token;
+const config = require('./config');
 
-const client = new commando.Client({
-  owner: '189938917942755328',
+const client = new sharpen.Client({
+  owner: config.owner,
   commandPrefix: 'sdev'
 });
 
@@ -15,13 +15,18 @@ client
   .on('warn', console.warn)
   .on('debug', console.log)
   .on('ready', () => {
-    // console.log(client.translator.languages);
-    console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+    console.log(
+      `Client ready; logged in as \
+      ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
   })
-  .on('disconnect', () => { console.warn('Disconnected!'); })
-  .on('reconnecting', () => { console.warn('Reconnecting...'); })
+  .on('disconnect', () => {
+    console.warn('Disconnected!');
+  })
+  .on('reconnecting', () => {
+    console.warn('Reconnecting...');
+  })
   .on('commandError', (cmd, err) => {
-    if (err instanceof commando.FriendlyError) return;
+    if (err instanceof sharpen.FriendlyError) return;
     console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
   })
   .on('commandBlocked', (msg, reason) => {
@@ -49,21 +54,32 @@ client
 			${enabled ? 'enabled' : 'disabled'} \
 			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
     );
+  })
+  .on('languageChange', (guild, lang) => {
+    console.log(
+      `Language set to ${lang} \
+      ${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
+    );
   });
 
 client.setProvider(
-  sqlite.open(path.join(__dirname, 'database.sqlite3')).then((db) => new commando.SQLiteProvider(db))
+  sqlite.open(path.join(__dirname, 'database.sqlite3')).then((db) => new sharpen.SQLiteProvider(db))
 ).catch(console.error);
 
 client.registry
   .registerDefaults()
-  // .registerGroup('math', 'Math')
-  // .registerTypesIn(path.join(__dirname, 'types'))
-  // .registerCommandsIn(path.join(__dirname, 'commands'));
+  .registerGroup('test', 'Testing')
+  .registerCommandsIn(path.join(__dirname, 'commands'));
+//
+// .registerGroup('math', 'Math')
+// .registerTypesIn(path.join(__dirname, 'types'))
+// .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.translator
   .registerDefaults()
+  .registerStringsFrom(path.join(__dirname, 'lang/en'), 'en')
+  .registerStringsFrom(path.join(__dirname, 'lang/fr'), 'fr');
 
-client.login(token);
+client.login(config.token);
 
 /* eslint-enable no-console */
