@@ -22,15 +22,20 @@
     "url": "https://github.com/brinkflew/sharpen/issues"
   },
   "homepage": "https://github.com/brinkflew/sharpen#readme",
+  "dependencies": {
+    "bufferutil": "^3.0.4",
+    "common-tags": "^1.7.2",
+    "discord.js": "github:discordjs/discord.js",
+    "erlpack": "github:discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.3",
+    "require-all": "^2.2.0",
+    "zlib-sync": "^0.1.4"
+  },
   "devDependencies": {
     "eslint": "^4.19.1"
   },
-  "dependencies": {
-    "common-tags": "^1.7.2",
-    "discord.js": "github:discordjs/discord.js",
-    "require-all": "^2.2.0"
-  },
   "optionalDependencies": {
+    "node-opus": "^0.2.7",
     "sqlite": "^2.9.1"
   }
 }
