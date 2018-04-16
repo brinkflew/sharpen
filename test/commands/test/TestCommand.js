@@ -15,7 +15,11 @@ class TestCommand extends Command {
   }
 
   async run(msg) {
-    msg.reply(msg.translate('CMD_TEST_SUCCESS'));
+    const testMsg = await msg.reply(msg.translate('CMD_TEST_LOADING'));
+    const n1 = Math.floor(Math.random() * 10);
+    const n2 = Math.floor(Math.random() * 10);
+    const add = n1 + n2;
+    return testMsg.edit(msg.translate('CMD_TEST_SUCCESS', n1, n2, add));
   }
 }
 
