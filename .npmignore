@@ -1,12 +1,7 @@
 # Packages
 node_modules/
 
-# Config
-config/
-
 # Miscellaneous
-resources/
-.tmp/
 .git/
 .gitignore
 .gitattributes

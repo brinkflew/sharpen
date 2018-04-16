@@ -166,6 +166,7 @@ class LanguageRegistry {
    * Parses a file to find and register strings
    * @param {string} path - Path to the file where strings are defined
    * @param {string} lang - Language of the strings to register
+   * @returns {LanguageRegistry}
    * @private
    */
   registerStringsFrom(path, lang) {
@@ -175,6 +176,8 @@ class LanguageRegistry {
       string = new LanguageString(this.client, { name: string[0], content: string[1], lang: lang });
       this.registerString(string);
     }
+
+    return this;
   }
 
   /**

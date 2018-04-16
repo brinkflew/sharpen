@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "common-tags": "^1.7.2",
-    "discord.js": "github:discordjs/discord.js"
+    "discord.js": "github:discordjs/discord.js",
+    "require-all": "^2.2.0"
   },
   "optionalDependencies": {
     "sqlite": "^2.9.1"
