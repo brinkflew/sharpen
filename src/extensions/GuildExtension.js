@@ -74,9 +74,9 @@ module.exports = Structures.extend('Guild', (Guild) => {
 			 * Emitted whenever a guild's language is changed
 			 * @event Client#languageChange
 			 * @param {?Guild} guild - Guild that the language was changed in (null for global)
-			 * @param {?string} prefix - New language(null for default)
+			 * @param {?string} lang - New language (null for default)
 			 */
-      this.client.emit('languageChange', this, this._commandPrefix);
+      this.client.emit('languageChange', this, this._lang);
     }
 
     /**

@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, max-len */
 
 const sharpen = require('../src');
 const path = require('path');
@@ -16,8 +16,7 @@ client
   .on('debug', console.log)
   .on('ready', () => {
     console.log(
-      `Client ready; logged in as \
-      ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+      `Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
   })
   .on('disconnect', () => {
     console.warn('Disconnected!');
@@ -50,20 +49,18 @@ client
   })
   .on('groupStatusChange', (guild, group, enabled) => {
     console.log(
-      `Group ${group.id} \
-			${enabled ? 'enabled' : 'disabled'} \
-			${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
+      `Group ${group.id} ${enabled ? 'enabled' : 'disabled'} ${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
     );
   })
   .on('languageChange', (guild, lang) => {
     console.log(
-      `Language set to ${lang} \
-      ${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
+      `Language set to ${lang} ${guild ? `in guild ${guild.name} (${guild.id})` : 'globally'}.`
     );
   });
 
 client.setProvider(
-  sqlite.open(path.join(__dirname, 'database.sqlite3')).then((db) => new sharpen.SQLiteProvider(db))
+  sqlite.open(path.join(__dirname, 'database.sqlite3'))
+    .then((db) => new sharpen.SQLiteProvider(db))
 ).catch(console.error);
 
 client.registry

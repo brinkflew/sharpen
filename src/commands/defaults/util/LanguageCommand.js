@@ -43,7 +43,6 @@ module.exports = class LanguageCommand extends Command {
 
     // Save the language
     const lowercase = args.language.toLowerCase();
-    const lang = lowercase.slice(0, 2);
     let response;
     if (lowercase === 'default') {
       if (msg.guild) msg.guild.lang = null;
@@ -51,9 +50,10 @@ module.exports = class LanguageCommand extends Command {
       const current = `\`${this.client.lang}\``;
       response = msg.translate('CMD_LANG_RESET', current);
     } else {
+      const lang = lowercase.slice(0, 2);
       if (msg.guild) msg.guild.lang = lang;
       else this.client.lang = lang;
-      response = msg.translate('CMD_LANG_SET', args.language);
+      response = msg.translate('CMD_LANG_SET', lang);
     }
 
     await msg.reply(response);
