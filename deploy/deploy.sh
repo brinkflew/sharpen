@@ -12,7 +12,7 @@ dockerize () {
   DOCKER_RELEASE="$1"
   tests
   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  docker build -t sharpen
+  docker build -t sharpen .
   docker run -d sharpen
   docker ps -a
   docker tag sharpen:latest brinkflew/sharpen:"$DOCKER_RELEASE"
