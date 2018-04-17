@@ -5,7 +5,6 @@ class TestCommand extends Command {
     super(client, {
       name: 'test',
       group: 'test',
-      memberName: 'test',
       description: 'CMD_TEST_DESCRIPTION',
       throttling: {
         usages: 2,

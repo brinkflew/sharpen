@@ -1,12 +1,11 @@
 const Command = require('../../Command');
 
-module.exports = class ListGroupsCommand extends Command {
+module.exports = class GroupsCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'groups',
       aliases: [ 'list-groups', 'show-groups' ],
       group: 'admin',
-      memberName: 'groups',
       description: 'CMD_GROUPS_DESCRIPTION',
       details: 'CMD_GROUPS_DETAILS',
       guarded: true

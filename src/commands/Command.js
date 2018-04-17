@@ -96,7 +96,7 @@ class Command {
 		 * Name of the command within the group
 		 * @type {string}
 		 */
-    this.memberName = info.memberName;
+    this.memberName = info.memberName || this.constructor.name;
 
     /**
 		 * Short description of the command
@@ -378,7 +378,6 @@ class Command {
 	 */
   unload() {
     const cmdPath = this.client.registry.resolveCommandPath(this.groupID, this.memberName);
-    console.log('>>> Path:', cmdPath);
     if (!require.cache[cmdPath]) throw new Error('Command cannot be unloaded.');
     delete require.cache[cmdPath];
     this.client.registry.unregisterCommand(this);
@@ -427,8 +426,10 @@ class Command {
     }
     if (typeof info.group !== 'string') throw new TypeError('Command group must be a string.');
     if (info.group !== info.group.toLowerCase()) throw new Error('Command group must be lowercase.');
-    if (typeof info.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
-    if (info.memberName !== info.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
+    if (info.membername) {
+      if (typeof info.memberName !== 'string') throw new TypeError('Command memberName must be a string.');
+      if (info.memberName !== info.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');
+    }
     if (typeof info.description !== 'string') throw new TypeError('Command description must be a string.');
     if ('format' in info && typeof info.format !== 'string') throw new TypeError('Command format must be a string.');
     if ('details' in info && typeof info.details !== 'string') throw new TypeError('Command details must be a string.');

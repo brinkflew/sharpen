@@ -5,7 +5,6 @@ module.exports = class LanguageCommand extends Command {
     super(client, {
       name: 'language',
       group: 'util',
-      memberName: 'language',
       aliases: [ 'lang' ],
       description: 'CMD_LANG_DESCRIPTION',
       format: '[language/"default"]',

@@ -1,13 +1,12 @@
 const fs = require('fs');
 const Command = require('../../Command');
 
-module.exports = class LoadCommandCommand extends Command {
+module.exports = class LoadCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'load',
       aliases: [ 'load-command' ],
       group: 'admin',
-      memberName: 'load',
       description: 'CMD_LOAD_DESCRIPTION',
       details: 'CMD_LOAD_DETAILS',
       examples: [ 'load some-command' ],

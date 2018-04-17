@@ -6,7 +6,6 @@ module.exports = class HelpCommand extends Command {
     super(client, {
       name: 'help',
       group: 'util',
-      memberName: 'help',
       aliases: [ 'commands' ],
       description: 'CMD_HELP_DESCRIPTION',
       details: 'CMD_HELP_DETAILS',

@@ -1,12 +1,11 @@
 const Command = require('../../Command');
 
-module.exports = class DisableCommandCommand extends Command {
+module.exports = class DisableCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'disable',
       aliases: [ 'disable-command', 'cmd-off', 'command-off' ],
       group: 'admin',
-      memberName: 'disable',
       description: 'CMD_DISABLE_DESCRIPTION',
       details: 'CMD_DISABLE_DETAILS',
       examples: [ 'disable util', 'disable Utility', 'disable prefix' ],

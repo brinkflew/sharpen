@@ -5,7 +5,6 @@ class PingCommand extends Command {
     super(client, {
       name: 'ping',
       group: 'util',
-      memberName: 'ping',
       description: 'CMD_PING_DESCRIPTION',
       throttling: {
         usages: 2,

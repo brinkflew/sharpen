@@ -1,12 +1,11 @@
 const Command = require('../../Command');
 
-module.exports = class UnloadCommandCommand extends Command {
+module.exports = class UnloadCommand extends Command {
   constructor(client) {
     super(client, {
       name: 'unload',
       aliases: [ 'unload-command' ],
       group: 'admin',
-      memberName: 'unload',
       description: 'CMD_UNLOAD_DESCRIPTION',
       details: 'CMD_UNLOAD_DETAILS',
       examples: [ 'unload some-command' ],

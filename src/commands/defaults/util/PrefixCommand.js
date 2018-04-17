@@ -5,7 +5,6 @@ module.exports = class PrefixCommand extends Command {
     super(client, {
       name: 'prefix',
       group: 'util',
-      memberName: 'prefix',
       description: 'CMD_PREFIX_DESCRIPTION',
       format: '[prefix/"default"/"none"]',
       details: 'CMD_PREFIX_DETAILS',

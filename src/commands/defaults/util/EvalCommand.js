@@ -11,7 +11,6 @@ module.exports = class EvalCommand extends Command {
     super(client, {
       name: 'eval',
       group: 'util',
-      memberName: 'eval',
       description: 'CMD_EVAL_DESCRIPTION',
       details: 'CMD_EVAL_DETAILS',
       ownerOnly: true,
