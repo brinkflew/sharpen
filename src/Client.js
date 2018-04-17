@@ -20,7 +20,7 @@ const GuildSettingsHelper = require('./helpers/GuildSettingsHelper');
 /**
  * Emitted upon the client's provider finishing initialisation
  * @event Client#providerReady
- * @param {SettingProvider} provider - Provider that was initialised
+ * @param {SettingsProvider} provider - Provider that was initialised
  */
 
 /**
@@ -57,7 +57,7 @@ class Client extends DiscordClient {
 
     /**
      * The client's setting provider
-     * @type {?SettingProvider}
+     * @type {?SettingsProvider}
      */
     this.provider = null;
 
@@ -177,7 +177,7 @@ class Client extends DiscordClient {
 
   /**
    * Sets the setting provider to use, and initialises it once the client is ready.
-   * @param {SettingProvider|Promise<SettingProvider>} provider Provider to use
+   * @param {SettingsProvider|Promise<SettingsProvider>} provider Provider to use
    * @returns {Promise<void>}
    */
   async setProvider(provider) {

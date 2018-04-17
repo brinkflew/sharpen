@@ -74,26 +74,22 @@ class LanguageRegistry {
     return this;
   }
 
-  /*
+  /**
    * Registers multiple languages
 	 * @param {Language[]|Function[]|Object[]|Array<string[]>} langs - An array of Language instances,
 	 * constructors, plain objects (with ID, name, and guarded properties),
 	 * or arrays of {@link LanguageRegistry#registerLanguage} parameters
-	 * @return {LanguageRegistry}
+	 * @returns {LanguageRegistry}
 	 * @example
-	 * ```js
 	 * registry.registerLanguage([
 	 * 	['en', 'English'],
 	 * 	['fr', 'Français']
 	 * ]);
-	 * ```
 	 * @example
-	 * ```js
 	 * registry.registerLanguages([
 	 * 	{ id: 'en', name: 'English' },
 	 * 	{ id: 'fr', name: 'Français' }
 	 * ]);
-	 * ```
 	 */
   registerLanguages(langs) {
     if (!Array.isArray(langs)) throw new TypeError('Langs must be an Array.');
@@ -148,7 +144,7 @@ class LanguageRegistry {
 	 * Registers multiple language strings
 	 * @param {LanguageString[]|Function[]} strings - An array of LanguageString instances or constructors
 	 * @param {boolean} [ignoreInvalid=false] - Whether to skip over invalid objects without throwing an error
-	 * @returns {CommandRegistry}
+	 * @returns {LanguageRegistry}
 	 */
   registerStrings(strings, ignoreInvalid = false) {
     if (!Array.isArray(strings)) throw new TypeError('Strings must be an Array.');
@@ -167,7 +163,6 @@ class LanguageRegistry {
    * @param {string} path - Path to the file where strings are defined
    * @param {string} lang - Language of the strings to register
    * @returns {LanguageRegistry}
-   * @private
    */
   registerStringsFrom(path, lang) {
     const strings = require(path);

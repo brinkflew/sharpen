@@ -99,26 +99,22 @@ class CommandRegistry {
     return this;
   }
 
-  /*
+  /**
    * Registers multiple groups
 	 * @param {CommandGroup[]|Function[]|Object[]|Array<string[]>} groups - An array of CommandGroup instances,
 	 * constructors, plain objects (with ID, name, and guarded properties),
 	 * or arrays of {@link CommandRegistry#registerGroup} parameters
-	 * @return {CommandRegistry}
+	 * @returns {CommandRegistry}
 	 * @example
-	 * ```js
 	 * registry.registerGroups([
 	 * 	['fun', 'Fun'],
 	 * 	['mod', 'Moderation']
 	 * ]);
-	 * ```
 	 * @example
-	 * ```js
 	 * registry.registerGroups([
 	 * 	{ id: 'fun', name: 'Fun' },
 	 * 	{ id: 'mod', name: 'Moderation' }
 	 * ]);
-	 * ```
 	 */
   registerGroups(groups) {
     if (!Array.isArray(groups)) throw new TypeError('Groups must be an Array.');
@@ -194,10 +190,8 @@ class CommandRegistry {
 	 * @param {string|RequireAllOptions} options - The path to the directory, or a require-all options object
 	 * @returns {CommandRegistry}
 	 * @example
-	 * ```js
 	 * const path = require('path');
 	 * registry.registerCommandsIn(path.join(__dirname, 'commands'));
-	 * ```
 	 */
   registerCommandsIn(options) {
     const obj = require('require-all')(options);

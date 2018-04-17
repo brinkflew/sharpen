@@ -261,7 +261,7 @@ class CommandDispatcher {
 
   /**
 	 * Creates a regular expression to match the command prefix and name in a message
-	 * @param {?string} prefix - Prefix to build the pattern for
+	 * @param {?string} [prefix] - Prefix to build the pattern for
 	 * @returns {RegExp}
 	 * @private
 	 */

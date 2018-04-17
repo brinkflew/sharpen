@@ -2,7 +2,7 @@ const SettingsProvider = require('./SettingsProvider');
 
 /**
  * Uses an SQLite database to store settings with guilds
- * @extends {SettingProvider}
+ * @extends {SettingsProvider}
  */
 class SQLiteProvider extends SettingsProvider {
   /**

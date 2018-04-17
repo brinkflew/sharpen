@@ -512,9 +512,9 @@ class CommandMessage {
 
 
   /* -------------------------------------------------------------------------------------------- *\
-	|*                                          SHORTCUTS                                           *|
-	|*                          Rest not, and beware, for here be dragons.                          *|
-	|* Below these lines lie the fabled message method/getter shortcuts for ye olde lazy developer. *|
+	 *                                          SHORTCUTS                                           *
+	 *                          Rest not, and beware, for here be dragons.                          *
+	 * Below these lines lie the fabled message method/getter shortcuts for ye olde lazy developer. *
 	\* -------------------------------------------------------------------------------------------- */
 
   /**

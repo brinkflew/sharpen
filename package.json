@@ -14,7 +14,8 @@
     "discord.js",
     "nodejs",
     "framework",
-    "bot"
+    "bot",
+    "discord"
   ],
   "author": "Brinkflew <antoine.van-serveyt@hotmail.be>",
   "license": "Apache-2.0",
@@ -32,7 +33,8 @@
     "zlib-sync": "^0.1.4"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "^4.19.1",
+    "jsdoc": "^3.5.5"
   },
   "optionalDependencies": {
     "node-opus": "^0.2.7",

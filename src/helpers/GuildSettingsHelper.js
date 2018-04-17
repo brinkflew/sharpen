@@ -1,5 +1,5 @@
 /**
- * Helper class to use {@link SettingProvider} methods for a specific Guild
+ * Helper class to use {@link SettingsProvider} methods for a specific Guild
  */
 class GuildSettingsHelper {
   /**
@@ -28,7 +28,7 @@ class GuildSettingsHelper {
 	 * @param {string} key - Name of the setting
 	 * @param {*} [defVal] - Value to default to if the setting isn't set
 	 * @returns {*}
-	 * @see {@link SettingProvider#get}
+	 * @see {@link SettingsProvider#get}
 	 */
   get(key, defVal) {
     if (!this.client.provider) throw new Error('No settings provider is available.');
@@ -40,7 +40,7 @@ class GuildSettingsHelper {
 	 * @param {string} key - Name of the setting
 	 * @param {*} val - Value of the setting
 	 * @returns {Promise<*>} New value of the setting
-	 * @see {@link SettingProvider#set}
+	 * @see {@link SettingsProvider#set}
 	 */
   set(key, val) {
     if (!this.client.provider) throw new Error('No settings provider is available.');
@@ -51,7 +51,7 @@ class GuildSettingsHelper {
 	 * Removes a setting from the guild
 	 * @param {string} key - Name of the setting
 	 * @returns {Promise<*>} Old value of the setting
-	 * @see {@link SettingProvider#remove}
+	 * @see {@link SettingsProvider#remove}
 	 */
   remove(key) {
     if (!this.client.provider) throw new Error('No settings provider is available.');
@@ -61,7 +61,7 @@ class GuildSettingsHelper {
   /**
 	 * Removes all settings in the guild
 	 * @returns {Promise<void>}
-	 * @see {@link SettingProvider#clear}
+	 * @see {@link SettingsProvider#clear}
 	 */
   clear() {
     if (!this.client.provider) throw new Error('No settings provider is available.');

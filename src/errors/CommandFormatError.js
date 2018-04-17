@@ -11,7 +11,6 @@ class CommandFormatError extends FriendlyError {
 	 */
   constructor(msg) {
     super(msg.translate('CMD_FORMAT_ERROR', msg));
-    this.name = 'CommandFormatError';
   }
 }
 

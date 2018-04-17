@@ -45,6 +45,10 @@ class CommandGroup {
 		 */
     this.guarded = guarded;
 
+    /**
+     * Whether the command group is enabled globally
+     * @type {boolean}
+     */
     this._globalEnabled = true;
   }
 

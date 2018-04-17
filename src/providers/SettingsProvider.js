@@ -5,10 +5,10 @@ const { Guild } = require('discord.js');
  * Loads and stores settings associated with guilds
  * @abstract
  */
-class SettingProvider {
+class SettingsProvider {
   constructor() {
-    if (this.constructor.name === 'SettingProvider') {
-      throw new Error('The base SettingProvider cannot be instantiated.');
+    if (this.constructor.name === 'SettingsProvider') {
+      throw new Error('The base SettingsProvider cannot be instantiated.');
     }
   }
 
@@ -78,4 +78,4 @@ class SettingProvider {
   }
 }
 
-module.exports = SettingProvider;
+module.exports = SettingsProvider;

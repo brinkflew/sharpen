@@ -1,6 +1,6 @@
 const path = require('path');
 const ArgumentCollector = require('../arguments/ArgumentCollector');
-const { permissions, oneLine } = require('common-tags');
+const { permissions } = require('common-tags');
 
 /**
  * @typedef {Object} ThrottlingOptions
