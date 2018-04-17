@@ -1,4 +1,4 @@
-const Command = require('../../../src/commands/Command');
+const { Command } = require('../../../src');
 
 class RandomCommand extends Command {
   constructor(client) {
