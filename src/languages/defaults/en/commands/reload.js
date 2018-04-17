@@ -10,7 +10,7 @@ module.exports = {
       Providing a command group will reload all of the commands in that group.
       Only the bot owner(s) may use this command.
     `,
-  ARGS_PROMPT_COMMAND: () => `Which command or group would you like to reload?`,
+  PROMPT_COMMAND: () => `Which command or group would you like to reload?`,
   RELOADED_COMMAND_REPLICATION_FAILED: (command) =>
     `Reloaded \`${command}\` command, but failed to reload on other shards.`,
   RELOADED_GROUP_REPLICATION_FAILED: (group) =>

@@ -15,7 +15,7 @@ module.exports = class DisableCommand extends Command {
         {
           key: 'cmdOrGrp',
           label: 'command/group',
-          prompt: 'CMD_DISABLE_ARGS_PROMPT_CMDORGROUP',
+          prompt: 'CMD_DISABLE_PROMPT_CMDORGROUP',
           type: 'group|command'
         }
       ]

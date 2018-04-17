@@ -15,7 +15,7 @@ module.exports = class EnableCommand extends Command {
         {
           key: 'cmdOrGrp',
           label: 'command/group',
-          prompt: 'CMD_ENABLE_ARGS_PROMPT_CMDORGROUP',
+          prompt: 'CMD_ENABLE_PROMPT_CMDORGROUP',
           type: 'group|command'
         }
       ]

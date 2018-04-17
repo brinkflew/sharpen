@@ -12,7 +12,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_LANGUAGE: () => `Quelle langue voudriez-vous que le bot parle ?`,
+  PROMPT_LANGUAGE: () => `Quelle langue voudriez-vous que le bot parle ?`,
 
   // Messages
   CURRENT: (lang) =>

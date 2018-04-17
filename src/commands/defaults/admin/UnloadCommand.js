@@ -15,7 +15,7 @@ module.exports = class UnloadCommand extends Command {
       args: [
         {
           key: 'command',
-          prompt: 'CMD_UNLOAD_ARGS_PROMPT_COMMAND',
+          prompt: 'CMD_UNLOAD_PROMPT_COMMAND',
           type: 'command'
         }
       ]

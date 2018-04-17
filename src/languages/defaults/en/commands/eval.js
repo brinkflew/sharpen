@@ -7,7 +7,7 @@ module.exports = {
   DETAILS: () => `Only the bot owner(s) may use this command.`,
 
   // Prompts
-  ARGS_PROMPT_SCRIPT: () => `What code would you like to evaluate?`,
+  PROMPT_SCRIPT: () => `What code would you like to evaluate?`,
 
   // Messages
   CALLBACK: (hrDiff, inspected) =>

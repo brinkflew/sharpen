@@ -13,7 +13,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_CMDORGROUP: () => `Quelle commande ou quel groupe souhaitez-vous activer ?`,
+  PROMPT_CMDORGROUP: () => `Quelle commande ou quel groupe souhaitez-vous activer ?`,
 
   // Messages
   ALREADY_ENABLED: (args, group) =>

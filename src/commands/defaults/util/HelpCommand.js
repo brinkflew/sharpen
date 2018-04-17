@@ -15,7 +15,7 @@ module.exports = class HelpCommand extends Command {
       args: [
         {
           key: 'command',
-          prompt: 'CMD_HELP_ARGS_PROMPT_COMMAND',
+          prompt: 'CMD_HELP_PROMPT_COMMAND',
           type: 'string',
           default: ''
         }

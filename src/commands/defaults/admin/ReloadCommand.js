@@ -16,7 +16,7 @@ module.exports = class ReloadCommand extends Command {
         {
           key: 'cmdOrGrp',
           label: 'command/group',
-          prompt: 'CMD_RELOAD_ARGS_PROMPT_COMMAND',
+          prompt: 'CMD_RELOAD_PROMPT_COMMAND',
           type: 'group|command'
         }
       ]

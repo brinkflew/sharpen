@@ -11,7 +11,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_CMDORGROUP: () => `Quelle commande ou quel groupe souhaitez-vous désactiver ?`,
+  PROMPT_CMDORGROUP: () => `Quelle commande ou quel groupe souhaitez-vous désactiver ?`,
 
   // Messages
   DISABLED: (args) =>

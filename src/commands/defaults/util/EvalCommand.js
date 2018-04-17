@@ -18,7 +18,7 @@ module.exports = class EvalCommand extends Command {
       args: [
         {
           key: 'script',
-          prompt: 'CMD_EVAL_ARGS_PROMPT_SCRIPT',
+          prompt: 'CMD_EVAL_PROMPT_SCRIPT',
           type: 'string'
         }
       ]

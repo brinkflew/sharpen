@@ -11,7 +11,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_CMDORGROUP: () => `Which command or group would you like to disable?`,
+  PROMPT_CMDORGROUP: () => `Which command or group would you like to disable?`,
 
   // Messages
   DISABLED: (args) =>

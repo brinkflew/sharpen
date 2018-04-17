@@ -13,7 +13,7 @@ module.exports = class PrefixCommand extends Command {
       args: [
         {
           key: 'prefix',
-          prompt: 'CMD_PREFIX_ARGS_PROMPT_PREFIX',
+          prompt: 'CMD_PREFIX_PROMPT_PREFIX',
           type: 'string',
           max: 15,
           default: ''

@@ -11,7 +11,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_CMDORGROUP: () => `Which command or group would you like to enable?`,
+  PROMPT_CMDORGROUP: () => `Which command or group would you like to enable?`,
 
   // Messages
   ALREADY_ENABLED: (args, group) =>

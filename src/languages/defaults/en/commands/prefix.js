@@ -13,7 +13,7 @@ module.exports = {
     `,
 
   // Prompts
-  ARGS_PROMPT_PREFIX: () => `What would you like to set the bot's prefix to?`,
+  PROMPT_PREFIX: () => `What would you like to set the bot's prefix to?`,
 
   // Messages
   CURRENT: (msg, prefix) =>

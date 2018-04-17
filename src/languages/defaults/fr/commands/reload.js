@@ -10,7 +10,7 @@ module.exports = {
       Fournir un groupe de commandes rchargera toutes les commandes de ce groupe.
       Seuls les propriétaires du bot peuvent utiliser cette commande.
     `,
-  ARGS_PROMPT_COMMAND: () => `Quelle commande ou groupe voulez-vous recharger ?`,
+  PROMPT_COMMAND: () => `Quelle commande ou groupe voulez-vous recharger ?`,
   RELOADED_COMMAND_REPLICATION_FAILED: (command) =>
     `La commande \`${command}\` a été rechargée, mais le rechargement sur les autres shards a échoué.`,
   RELOADED_GROUP_REPLICATION_FAILED: (group) =>

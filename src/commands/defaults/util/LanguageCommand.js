@@ -14,7 +14,7 @@ module.exports = class LanguageCommand extends Command {
       args: [
         {
           key: 'language',
-          prompt: 'CMD_LANG_ARGS_PROMPT_LANGUAGE',
+          prompt: 'CMD_LANG_PROMPT_LANGUAGE',
           type: 'string',
           max: 15,
           default: ''

@@ -14,7 +14,7 @@ module.exports = {
    `,
 
   // Prompts
-  ARGS_PROMPT_COMMAND: () => `Pour quelle commande voulez-vous voir l'aide?`,
+  PROMPT_COMMAND: () => `Pour quelle commande voulez-vous voir l'aide?`,
 
   // Command messages
   SENT_DM: () => `Un MP avec des informations vous a été envoyé.`,

@@ -140,12 +140,12 @@ class CommandMessage {
 			 * (built-in reasons are `guildOnly`, `permission`, and `throttling`)
 			 */
       this.client.emit('commandBlocked', this, 'guildOnly');
-      return this.reply(`The \`${this.command.name}\` command must be used in a server channel.`);
+      return this.reply(this.translate('CMD_BLOCKED_SERVER_ONLY', this.command));
     }
 
     if (this.command.nsfw && !this.message.channel.nsfw) {
       this.client.emit('commandBlocked', this, 'nsfw');
-      return this.reply(`The \`${this.command.name}\` command can only be used in NSFW channels.`);
+      return this.reply(this.translate('CMD_BLOCKED_NSFW_ONLY', this.command));
     }
 
     // Ensure the user has permission to use the command
@@ -153,7 +153,7 @@ class CommandMessage {
     if (!hasPermission || typeof hasPermission === 'string') {
       this.client.emit('commandBlocked', this, 'permission');
       if (typeof hasPermission === 'string') return this.reply(hasPermission);
-      else return this.reply(`You do not have permission to use the \`${this.command.name}\` command.`);
+      else return this.reply(this.translate('CMD_BLOCKED_USER_PERMISSION', this.command));
     }
 
     // Ensure the client user has the required permissions
@@ -162,14 +162,9 @@ class CommandMessage {
       if (missing.length > 0) {
         this.client.emit('commandBlocked', this, 'clientPermissions');
         if (missing.length === 1) {
-          return this.reply(
-            `I need the "${permissions[missing[0]]}" permission for the \`${this.command.name}\` command to work.`
-          );
+          return this.reply(this.translate('CMD_BLOCKED_CLIENT_PERMISSION', this.command, permissions[missing[0]]));
         }
-        return this.reply(oneLine`
-					I need the following permissions for the \`${this.command.name}\` command to work:
-					${missing.map((perm) => permissions[perm]).join(', ')}
-				`);
+        return this.reply(this.translate('CMD_BLOCKED_CLIENT_PERMISSIONS', this.command, permissions, missing));
       }
     }
 
@@ -178,9 +173,7 @@ class CommandMessage {
     if (throttle && throttle.usages + 1 > this.command.throttling.usages) {
       const remaining = (throttle.start + (this.command.throttling.duration * 1000) - Date.now()) / 1000;
       this.client.emit('commandBlocked', this, 'throttling');
-      return this.reply(
-        `You may not use the \`${this.command.name}\` command again for another ${remaining.toFixed(1)} seconds.`
-      );
+      return this.reply(this.translate('CMD_BLOCKED_THROTTLED', this.command, remaining));
     }
 
     // Figure out the command arguments
@@ -196,7 +189,7 @@ class CommandMessage {
           const err = new CommandFormatError(this.client, this);
           return this.reply(err.message);
         }
-        return this.reply('Cancelled command.');
+        return this.reply(this.translate('PROMPT_CANCELLED'));
       }
       args = result.values;
     }
@@ -250,11 +243,7 @@ class CommandMessage {
         }).join(owners.length > 2 ? ', ' : ' ') : '';
 
         const invite = this.client.options.invite;
-        return this.reply(stripIndents`
-					An error occurred while running the command: \`${err.name}: ${err.message}\`
-					You shouldn't ever receive an error like this.
-					Please contact ${ownerList || 'the bot owner'}${invite ? ` in this server: ${invite}` : '.'}
-				`);
+        return this.reply(this.translate('CMD_UNEXPECTED_ERROR', err, ownerList, invite));
       }
     }
   }
