@@ -8,7 +8,7 @@ before_install:
   - npm install -g eslint
 install: npm install
 script:
-  - npm run test
+  - bash ./deploy/deploy.sh
 sudo: false
 dist: trusty
 env:
