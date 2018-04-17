@@ -378,6 +378,7 @@ class Command {
 	 */
   unload() {
     const cmdPath = this.client.registry.resolveCommandPath(this.groupID, this.memberName);
+    console.log('>>> Path:', cmdPath);
     if (!require.cache[cmdPath]) throw new Error('Command cannot be unloaded.');
     delete require.cache[cmdPath];
     this.client.registry.unregisterCommand(this);
