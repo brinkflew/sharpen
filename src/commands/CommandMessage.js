@@ -4,7 +4,7 @@ const {
   escapeMarkdown,
   splitMessage
 } = require('discord.js');
-const { oneLine, stripIndents } = require('common-tags');
+const { oneLine } = require('common-tags');
 const { permissions } = require('../utils');
 const Command = require('./Command');
 const FriendlyError = require('../errors/FriendlyError');
