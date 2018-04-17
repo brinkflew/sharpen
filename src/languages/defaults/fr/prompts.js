@@ -1,7 +1,7 @@
 const { oneLine } = require('common-tags');
 
 module.exports = {
-  INVALID_ARG: (label) => `Vous avez fourni un(e) ${label} invalide. Veuillez réessayer.`,
+  INVALID_ARG: (label) => `Vous avez fourni un argument invalide (type attendu : *${label}*). Veuillez réessayer.`,
   CANCEL: (waiting, time) =>
     oneLine`
       Répondez \`cancel\` pour annuler la commande.
@@ -10,7 +10,7 @@ module.exports = {
   CANCELLED: () => `Commande annulée.`,
   INFINITE_INVALID_ARG: (label, escaped) =>
     oneLine`
-      Vous avez fourni un(e) ${label} invalide,
+      Vous avez fourni un argument invalide (type attendu : *${label}*),
       "${escaped.length < 1850 ? escaped : '[trop long pour être affiché]'}".
       Veuillez réessayer.
     `,

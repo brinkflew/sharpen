@@ -140,12 +140,12 @@ class CommandMessage {
 			 * (built-in reasons are `guildOnly`, `permission`, and `throttling`)
 			 */
       this.client.emit('commandBlocked', this, 'guildOnly');
-      return this.reply(this.translate('CMD_BLOCKED_SERVER_ONLY', this.command));
+      return this.reply(this.translate('CMD_SERVER_ONLY_ERROR', this.command));
     }
 
     if (this.command.nsfw && !this.message.channel.nsfw) {
       this.client.emit('commandBlocked', this, 'nsfw');
-      return this.reply(this.translate('CMD_BLOCKED_NSFW_ONLY', this.command));
+      return this.reply(this.translate('CMD_NSFW_ONLY_ERROR', this.command));
     }
 
     // Ensure the user has permission to use the command
@@ -162,9 +162,9 @@ class CommandMessage {
       if (missing.length > 0) {
         this.client.emit('commandBlocked', this, 'clientPermissions');
         if (missing.length === 1) {
-          return this.reply(this.translate('CMD_BLOCKED_CLIENT_PERMISSION', this.command, permissions[missing[0]]));
+          return this.reply(this.translate('CMD_CLIENT_PERMISSION_ERROR', this.command, permissions[missing[0]]));
         }
-        return this.reply(this.translate('CMD_BLOCKED_CLIENT_PERMISSIONS', this.command, permissions, missing));
+        return this.reply(this.translate('CMD_CLIENT_PERMISSIONS_ERROR', this.command, permissions, missing));
       }
     }
 
@@ -173,7 +173,7 @@ class CommandMessage {
     if (throttle && throttle.usages + 1 > this.command.throttling.usages) {
       const remaining = (throttle.start + (this.command.throttling.duration * 1000) - Date.now()) / 1000;
       this.client.emit('commandBlocked', this, 'throttling');
-      return this.reply(this.translate('CMD_BLOCKED_THROTTLED', this.command, remaining));
+      return this.reply(this.translate('CMD_THROTTLED_ERROR', this.command, remaining));
     }
 
     // Figure out the command arguments

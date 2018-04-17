@@ -233,16 +233,16 @@ class Command {
     if (ownerOverride && this.client.isOwner(message.author)) return true;
 
     if (this.ownerOnly && (ownerOverride || !this.client.isOwner(message.author))) {
-      return message.translate('PERMISSION_OWNER_ONLY', this);
+      return message.translate('CMD_OWNER_ONLY_ERROR', this);
     }
 
     if (message.channel.type === 'text' && this.userPermissions) {
       const missing = message.channel.permissionsFor(message.author).missing(this.userPermissions);
       if (missing.length > 0) {
         if (missing.length === 1) {
-          return message.translate('PERMISSION_MISSING_ONE', this, permissions[missing[0]]);
+          return message.translate('CMD_MISSING_USER_PERMISSION_ERROR', this, permissions[missing[0]]);
         }
-        return message.translate('PERMISSION_MISSING_LIST', this, permissions, missing);
+        return message.translate('CMD_MISSING_USER_PERMISSIONS_ERROR', this, permissions, missing);
       }
     }
 

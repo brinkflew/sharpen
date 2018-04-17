@@ -3,7 +3,6 @@ const help = require('./commands/help');
 const lang = require('./commands/lang');
 const ping = require('./commands/ping');
 const prefix = require('./commands/prefix');
-
 const disable = require('./commands/disable');
 const enable = require('./commands/enable');
 const groups = require('./commands/groups');
@@ -12,10 +11,7 @@ const reload = require('./commands/reload');
 const unload = require('./commands/unload');
 
 const prompts = require('./prompts');
-
-const error = require('./errors/command-format');
-const blocked = require('./errors/command-message');
-const permissions = require('./permissions');
+const errors = require('./errors');
 
 /* eslint-disable max-len */
 
@@ -125,17 +121,17 @@ module.exports = {
   PROMPT_INFINITE_INVALID_ARG: prompts.INFINITE_INVALID_ARG,
 
   // Friendly errors
-  CMD_FORMAT_ERROR: error.FORMAT_ERROR,
-  CMD_BLOCKED_SERVER_ONLY: blocked.SERVER_ONLY,
-  CMD_BLOCKED_NSFW_ONLY: blocked.NSFW_ONLY,
-  CMD_BLOCKED_USER_PERMISSIONS: blocked.USER_PERMISSIONS,
-  CMD_BLOCKED_CLIENT_PERMISSION: blocked.CLIENT_PERMISSION,
-  CMD_BLOCKED_CLIENT_PERMISSIONS: blocked.CLIENT_PERMISSIONS,
-  CMD_BLOCKED_THROTTLED: blocked.THROTTLED,
-  CMD_UNEXPECTED_ERROR: blocked.UNEXPECTED_ERROR,
-  PERMISSION_OWNER_ONLY: permissions.OWNER_ONLY,
-  PERMISSION_MISSING_ONE: permissions.MISSING_ONE,
-  PERMISSION_MISSING_LIST: permissions.MISSING_LIST
+  CMD_OWNER_ONLY_ERROR: errors.OWNER_ONLY,
+  CMD_SERVER_ONLY_ERROR: errors.SERVER_ONLY,
+  CMD_NSFW_ONLY_ERROR: errors.NSFW_ONLY,
+  CMD_USER_PERMISSION_ERROR: errors.USER_PERMISSION,
+  CMD_CLIENT_PERMISSION_ERROR: errors.CLIENT_PERMISSION,
+  CMD_CLIENT_PERMISSIONS_ERROR: errors.CLIENT_PERMISSIONS,
+  CMD_MISSING_USER_PERMISSION_ERROR: errors.MISSING_PERMISSION,
+  CMD_MISSING_USER_PERMISSIONS_ERROR: errors.MISSING_PERMISSIONS,
+  CMD_THROTTLED_ERROR: errors.THROTTLED,
+  CMD_UNEXPECTED_ERROR: errors.UNEXPECTED_ERROR,
+  CMD_FORMAT_ERROR: errors.FORMAT_ERROR
 };
 
 /* eslint-enable max-len */
