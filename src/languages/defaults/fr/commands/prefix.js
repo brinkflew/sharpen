@@ -8,7 +8,8 @@ module.exports = {
     oneLine`
       Si aucun préfixe n'est fourni, le préfixe courant est montré.
       Si le préfixs est "default", le préfixe sera réinitialisé au préfixe par défaut du bot.
-      Si le préfixe est "none", le préfixe sera complètement désactivé, seules les mentions seront disponibles pour exécuter des commandes.
+      Si le préfixe est "none", le préfixe sera complètement désactivé, seules
+      les mentions seront disponibles pour exécuter des commandes.
       Seuls les administrateurs peuvent modifier le préfixe.
     `,
 

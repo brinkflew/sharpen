@@ -1,4 +1,4 @@
-const Argument = require('./argument');
+const Argument = require('./Argument');
 
 /** Obtains, validates, and prompts for argument values */
 class ArgumentCollector {

@@ -1,0 +1,9 @@
+version: '3'
+services:
+  sharpen:
+    image: brinkflew/sharpen:latest
+    restart: always
+    environment:
+      - TOKEN=BOT_TOKEN
+      - OWNERS=OWNER_IDS_COMMA_SEPARATED
+      - DATABASE=database.slite3

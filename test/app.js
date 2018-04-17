@@ -4,9 +4,10 @@ const sharpen = require('../src');
 const path = require('path');
 const sqlite = require('sqlite');
 const config = require('./config');
+const { TOKEN, DATABASE, OWNERS } = process.env;
 
 const client = new sharpen.Client({
-  owner: config.owner,
+  owner: OWNERS ? OWNERS.split(',') : config.owner,
   commandPrefix: 'sdev'
 });
 
@@ -59,7 +60,7 @@ client
   });
 
 client.setProvider(
-  sqlite.open(path.join(__dirname, 'database.sqlite3'))
+  sqlite.open(path.join(__dirname, DATABASE || 'database.sqlite3'))
     .then((db) => new sharpen.SQLiteProvider(db))
 ).catch(console.error);
 
@@ -78,6 +79,6 @@ client.translator
   .registerStringsFrom(path.join(__dirname, 'lang/en'), 'en')
   .registerStringsFrom(path.join(__dirname, 'lang/fr'), 'fr');
 
-client.login(config.token);
+client.login(TOKEN || config.token);
 
 /* eslint-enable no-console */
