@@ -237,7 +237,7 @@ class LanguageRegistry {
     const language = this.languages.get(lang);
     if (!language) throw new Error(`Language ${lang} is not registered`);
     let string = language.strings.get(id);
-    if (!string) throw new Error(`Language string "${id}" is not registered`);
+    if (!string) return id;
     string = string.content;
     if (typeof string === 'string') return string;
     if (typeof string === 'function') return string(...args);

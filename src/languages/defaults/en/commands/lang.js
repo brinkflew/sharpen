@@ -20,7 +20,7 @@ module.exports = {
       The current language is ${lang.name}.
     `,
   SET: (lang) => `Set the language to \`${lang}\`.`,
-  RESET: (current) => `Reset the language to the default (currently ${current}).`,
+  RESET: (current) => `Reset the language to its default (currently ${current}).`,
   ADMIN_ONLY: () => `Only administrators may change the language.`,
   OWNER_ONLY: () => `Only the bot owner(s) may change the global language.`
 };

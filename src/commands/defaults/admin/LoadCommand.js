@@ -17,13 +17,13 @@ module.exports = class LoadCommandCommand extends Command {
       args: [
         {
           key: 'command',
-          prompt: 'Which command would you like to load?',
+          prompt: 'CMD_LOAD_ARGS_PROMPT_COMMAND',
           validate: (val) => new Promise((resolve) => {
             if (!val) return resolve(false);
             const split = val.split(':');
             if (split.length !== 2) return resolve(false);
             if (this.client.registry.findCommands(val).length > 0) {
-              return resolve('That command is already registered.');
+              return resolve('CMD_LOAD_ALREADY_REGISTERED');
             }
             const cmdPath = this.client.registry.resolveCommandPath(split[0], split[1]);
             fs.access(cmdPath, fs.constants.R_OK, (err) => err ? resolve(false) : resolve(true));
@@ -56,12 +56,12 @@ module.exports = class LoadCommandCommand extends Command {
       } catch (err) {
         this.client.emit('warn', `Error when broadcasting command load to other shards`);
         this.client.emit('error', err);
-        await msg.reply(`Loaded \`${command.name}\` command, but failed to load on other shards.`);
+        await msg.reply(msg.translate('CMD_LOAD_LOADED_REPLICATION_FAILED', command.name));
         return null;
       }
     }
 
-    await msg.reply(`Loaded \`${command.name}\` command${this.client.shard ? ' on all shards' : ''}.`);
+    await msg.reply(msg.translate('CMD_LOAD_LOADED', command.name, this.client.shard));
     return null;
   }
 };

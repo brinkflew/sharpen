@@ -16,7 +16,7 @@ module.exports = class UnloadCommandCommand extends Command {
       args: [
         {
           key: 'command',
-          prompt: 'Which command would you like to unload?',
+          prompt: 'CMD_UNLOAD_ARGS_PROMPT_COMMAND',
           type: 'command'
         }
       ]
@@ -34,12 +34,12 @@ module.exports = class UnloadCommandCommand extends Command {
       } catch (err) {
         this.client.emit('warn', `Error when broadcasting command unload to other shards`);
         this.client.emit('error', err);
-        await msg.reply(`Unloaded \`${args.command.name}\` command, but failed to unload on other shards.`);
+        await msg.reply(msg.translate('CMD_UNLOAD_UNLOADED_REPLICATION_FAILED', args.command.name));
         return null;
       }
     }
 
-    await msg.reply(`Unloaded \`${args.command.name}\` command${this.client.shard ? ' on all shards' : ''}.`);
+    await msg.reply(msg.translate('CMD_UNLOAD_UNLOADED', args.command.name, this.client.shard));
     return null;
   }
 };

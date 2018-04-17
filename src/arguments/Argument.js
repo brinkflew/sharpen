@@ -1,4 +1,4 @@
-const { stripIndents, oneLine } = require('common-tags');
+const { stripIndents } = require('common-tags');
 const { escapeMarkdown } = require('discord.js');
 const ArgumentUnionType = require('./defaults/UnionArgumentType');
 
@@ -178,12 +178,10 @@ class Argument {
       }
 
       // Prompt the user for a new value
+      const prompt = msg.translate(this.prompt);
       prompts.push(await msg.reply(stripIndents`
-				${empty ? this.prompt : valid ? valid : `You provided an invalid ${this.label}. Please try again.`}
-				${oneLine`
-					Respond with \`cancel\` to cancel the command.
-					${wait ? `The command will automatically be cancelled in ${this.wait} seconds.` : ''}
-				`}
+				${empty ? prompt : valid ? msg.translate(valid) : msg.translate('PROMPT_INVALID_ARG', this.label)}
+				${msg.translate('PROMPT_CANCEL', wait, this.wait)}
 			`));
 
       // Get the user's response
@@ -264,23 +262,13 @@ class Argument {
         if (val) {
           const escaped = escapeMarkdown(val).replace(/@/g, '@\u200b');
           prompts.push(await msg.reply(stripIndents`
-						${valid ? valid : oneLine`
-							You provided an invalid ${this.label},
-							"${escaped.length < 1850 ? escaped : '[too long to show]'}".
-							Please try again.
-						`}
-						${oneLine`
-							Respond with \`cancel\` to cancel the command, or \`finish\` to finish entry up to this point.
-							${wait ? `The command will automatically be cancelled in ${this.wait} seconds.` : ''}
-						`}
+						${valid ? msg.translate(valid) : msg.translate('PROMPT_INFINITE_INVALID_ARG', this.label, escaped)}
+						${msg.translate('PROMPT_INFINITE_CANCEL', wait, this.wait)}
 					`));
         } else if (results.length === 0) {
           prompts.push(await msg.reply(stripIndents`
-						${this.prompt}
-						${oneLine`
-							Respond with \`cancel\` to cancel the command, or \`finish\` to finish entry.
-							${wait ? `The command will automatically be cancelled in ${this.wait} seconds, unless you respond.` : ''}
-						`}
+						${msg.translate(this.prompt)}
+						${msg.translate('PROMPT_INFINITE_CANCEL', wait, this.wait)}
 					`));
         }
 

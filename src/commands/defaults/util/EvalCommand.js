@@ -60,7 +60,7 @@ module.exports = class EvalCommand extends Command {
       this.lastResult = eval(args.script);
       hrDiff = process.hrtime(hrStart);
     } catch (err) {
-      return msg.reply(msg.translate('CMD_HELP_EVALUATION_ERROR', err));
+      return msg.reply(msg.translate('CMD_EVAL_EVALUATION_ERROR', err));
     }
 
     // Prepare for callback time and respond
