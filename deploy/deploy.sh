@@ -13,7 +13,7 @@ dockerize () {
   tests
   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   docker build -t sharpen .
-  docker run -d sharpen --name sharpen-test
+  docker run -d --name sharpen-bot sharpen
   echo ""
   docker ps -a
   echo ""
