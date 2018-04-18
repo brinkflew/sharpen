@@ -75,7 +75,9 @@ git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
 cd ..
 
 # Clean out existing contents
-rm -rf out/docs/**/* || exit 0
+if [ -d out/docs ]; then
+  rm -Rf out/docs
+fi
 
 # Move the generated doc files to the newly-checked-out repo
 mv docs out
