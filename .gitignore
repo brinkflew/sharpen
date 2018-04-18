@@ -2,9 +2,6 @@
 node_modules
 package-lock.json
 
-# Documentation
-docs
-
 # Tests
 test/config.json
 test/config.js
