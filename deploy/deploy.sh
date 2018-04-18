@@ -58,35 +58,24 @@ fi
 echo -e "\e[36m\e[1mGenerating documentation for \"${SOURCE}\"."
 gendoc
 
-# Decrypt and add the ssh key
-# echo -e "\e[36m\e[1mDecrypting SSH key."
-# ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
-# ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
-# ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
-# ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
-# openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy/deploy_key.enc -out deploy/deploy_key.pem -d
-# chmod 600 deploy/deploy_key
-# eval `ssh-agent -s`
-# ssh-add deploy/deploy_key
-
 # Initialise some useful variables
 REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
-# Clone the existing GitHub pages for this repo into outTARGET_BRANCH="docs"
-TARGET_BRANCH="docs"
+if [ -d out ]; then
+  rm -Rf out
+fi
+
+# Clone the existing GitHub pages for this repo into out
+TARGET_BRANCH="$SOURCE"
 git clone $REPO out
 cd out
 git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
 cd ..
 
 # Clean out existing contents
-rm -rf out/**/* || exit 0
-
-# Checkout the repo in the target branch so we can build docs and push to it
-TARGET_BRANCH="docs"
-git clone $REPO out -b $TARGET_BRANCH
+rm -rf out/docs/**/* || exit 0
 
 # Move the generated doc files to the newly-checked-out repo
 mv docs out
