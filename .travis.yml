@@ -7,10 +7,8 @@ services:
 cache:
   directories:
     - node_modules
-before_install:
-  - npm install -g eslint
-install: npm install
 before_script:
+  - npm install -g eslint jsdoc
   - echo -e "Host github.com\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/id_rsa\n" >> ~/.ssh/config
 script:
   - bash ./deploy/deploy.sh
