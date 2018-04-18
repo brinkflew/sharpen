@@ -24,8 +24,6 @@ dockerize () {
   docker push brinkflew/sharpen:"$DOCKER_RELEASE"
 }
 
-$TARGET_BRANCH="docs"
-
 # For revert branches, do nothing
 if [[ "$TRAVIS_BRANCH" == revert-* ]]; then
   echo -e "\e[36m\e[1mBuild triggered for reversion branch \"${TRAVIS_BRANCH}\" - Nothing to do."
@@ -64,7 +62,8 @@ REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
-# Clone the existing GitHub pages for this repo into out
+# Clone the existing GitHub pages for this repo into outTARGET_BRANCH="docs"
+TARGET_BRANCH="docs"
 git clone $REPO out
 cd out
 git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
