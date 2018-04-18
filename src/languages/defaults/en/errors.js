@@ -29,6 +29,7 @@ module.exports = {
     `You may not use the \`${command.name}\` command again for another ${time.toFixed(1)} seconds.`,
 
   // Other errors
+  UNKNOWN_ERROR: (usage) => `Unknown command. Use ${usage} to view the list of all commands.`,
   UNEXPECTED_ERROR: (error, ownerList, invite) =>
     stripIndents`
       An error occurred while running the command: \`${error.name}: ${error.message}\`

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: languages/LanguageRegistry.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: languages/LanguageRegistry.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { Collection } = require('discord.js');
+const Language = require('./Language');
+const LanguageString = require('./LanguageString');
+
+/**
+ * Emitted when a language is registered
+ * @event Client#languageRegister
+ * @param {string}
+ */
+
+/**
+ * Handles registration and searching of language strings
+ */
+class LanguageRegistry {
+
+  /**
+   * @param {Client} client  -Client the registry is for
+   */
+  constructor(client) {
+
+    /**
+		 * The client this registry is for.
+		 * @name LanguageRegistry#client
+		 * @type {Client}
+		 * @readonly
+		 */
+    Object.defineProperty(this, 'client', { value: client });
+
+    /**
+     * Registered languages
+     * @type {Collection&lt;string, Language>}
+     */
+    this.languages = new Collection();
+
+    /**
+     * Registered strings
+     * @type {Collection&lt;string, LanguageString>}
+     */
+    this.strings = new Collection();
+
+    /**
+     * Fully resolved path to the strings' directory
+     * @type {?string}
+     */
+    this.stringsPath = null;
+  }
+
+  /**
+   * Registers a single language
+   * @param {Language|Function|Object|string} lang - A Language instance, a constructor or the Language ID
+   * @param {string} [name] - Name for the language (if the first argument is the language ID)
+   * @returns {LanguageRegistry}
+   * @see {@link LanguageRegistry#registerLanguages}
+   */
+  registerLanguage(lang, name) {
+    if (typeof lang === 'string') {
+      lang = new Language(this.client, lang, name);
+    } else if (typeof lang === 'function') {
+      lang = new lang(this.client);
+    } else if (typeof lang === 'object' &amp;&amp; !(lang instanceof Language)) {
+      lang = new Language(this.client, lang.id, lang.name);
+    }
+
+    const existing = this.languages.get(lang.id);
+    if (existing) {
+      existing.name = lang.name;
+      this.client.emit('debug', `Lang ${lang.id} is already registered; renamed it to "${lang.name}".`);
+    } else {
+      this.languages.set(lang.id, lang);
+      this.client.emit('languageRegister', lang, this);
+      this.client.emit('debug', `Registered language ${lang.id}.`);
+    }
+
+    return this;
+  }
+
+  /**
+   * Registers multiple languages
+	 * @param {Language[]|Function[]|Object[]|Array&lt;string[]>} langs - An array of Language instances,
+	 * constructors, plain objects (with ID, name, and guarded properties),
+	 * or arrays of {@link LanguageRegistry#registerLanguage} parameters
+	 * @returns {LanguageRegistry}
+	 * @example
+	 * registry.registerLanguage([
+	 * 	['en', 'English'],
+	 * 	['fr', 'Français']
+	 * ]);
+	 * @example
+	 * registry.registerLanguages([
+	 * 	{ id: 'en', name: 'English' },
+	 * 	{ id: 'fr', name: 'Français' }
+	 * ]);
+	 */
+  registerLanguages(langs) {
+    if (!Array.isArray(langs)) throw new TypeError('Langs must be an Array.');
+    for (const lang of langs) {
+      if (Array.isArray(lang)) this.registerLanguage(...lang);
+      else this.registerLang(lang);
+    }
+    return this;
+  }
+
+  /**
+   * Registers a single language string
+   * @param {LanguageString|Function} string - A LanguageString instance, or a constructor for one
+   * @returns {LanguageRegistry}
+   * @see {@link LanguageRegistry#registerStrings}
+   */
+  registerString(string) {
+    if (typeof string === 'function') string = new string(this.client);
+    if (!(string instanceof LanguageString)) throw new Error(`Invalid language string object to register: ${string}`);
+
+    // Make sure there aren't any conflicts
+    if (this.strings.some((str) => str.name === string.name &amp;&amp; str.langID === string.langID)) {
+      throw new Error(
+        `A language string with the name "${string.name}" is already registered for language ${string.langID}.`
+      );
+    }
+
+    const language = this.languages.find((lang) => lang.id === string.langID);
+    if (!language) throw new Error(`Language "${string.langID}" is not registered.`);
+    if (language.strings.some((str) => str.name === string.name)) {
+      throw new Error(`A language string with name "${string.name}" is already registered in ${language.id}.`);
+    }
+
+    // Add the string
+    string.lang = language;
+    language.strings.set(string.name, string);
+    this.strings.set(`[${string.langID}]${string.name}`, string);
+
+    /**
+     * Emitted when a sring is registered
+     * @event Client#languageStringRegister
+     * @param {LanguageString} string - String that was registered
+     * @param {LanguageRegistry} registry - Registry that the string was registered to
+     */
+    this.client.emit('languageStringRegister', string, this);
+    this.client.emit('debug', `Registered language string ${language.id}:${string.name}.`);
+
+    return this;
+  }
+
+  /**
+	 * Registers multiple language strings
+	 * @param {LanguageString[]|Function[]} strings - An array of LanguageString instances or constructors
+	 * @param {boolean} [ignoreInvalid=false] - Whether to skip over invalid objects without throwing an error
+	 * @returns {LanguageRegistry}
+	 */
+  registerStrings(strings, ignoreInvalid = false) {
+    if (!Array.isArray(strings)) throw new TypeError('Strings must be an Array.');
+    for (const string of strings) {
+      if (ignoreInvalid &amp;&amp; typeof string !== 'function' &amp;&amp; !(string instanceof LanguageString)) {
+        this.client.emit('warn', `Attempting to register an invalid command object: ${string}; skipping.`);
+        continue;
+      }
+      this.registerCommand(string);
+    }
+    return this;
+  }
+
+  /**
+   * Parses a file to find and register strings
+   * @param {string} path - Path to the file where strings are defined
+   * @param {string} lang - Language of the strings to register
+   * @returns {LanguageRegistry}
+   */
+  registerStringsFrom(path, lang) {
+    const strings = require(path);
+    if (typeof strings !== 'object') throw new TypeError('File must export an object of functions or strings');
+    for (let string of Object.entries(strings)) {
+      string = new LanguageString(this.client, { name: string[0], content: string[1], lang: lang });
+      this.registerString(string);
+    }
+
+    return this;
+  }
+
+  /**
+	 * Registers the default languages and strings. This is equivalent to:
+	 * ```js
+	 * registry.registerDefaultLanguages()
+	 * 	.registerDefaultStrings();
+	 * ```
+	 * @returns {LanguageRegistry}
+	 */
+  registerDefaults() {
+    this.registerDefaultLanguages();
+    this.registerDefaultStrings();
+    return this;
+  }
+
+  /**
+   * Registers the default languages to the registry
+   * @param {Object} [languages] - Object specifying which languages to register
+   * @param {boolean} [languages.en=true] - Whether to register the built-in English language
+   * @returns {LanguageRegistry}
+   */
+  registerDefaultLanguages(languages = {}) {
+    languages = {
+      en: true, fr: true,
+      languages
+    };
+
+    if (languages.en) this.registerLanguage('en', 'English');
+    if (languages.fr) this.registerLanguage('fr', 'Français');
+
+    return this;
+  }
+
+  /**
+   * Registers the default language strings to the registry
+   * @returns {LanguageRegistry}
+   */
+  registerDefaultStrings() {
+    if (this.languages.has('en')) this.registerStringsFrom('./defaults/en', 'en');
+    if (this.languages.has('fr')) this.registerStringsFrom('./defaults/fr', 'fr');
+
+    return this;
+  }
+
+  /**
+   * Fetches a string and displays it in the right language
+   * @param {string} id - ID for the string to fetch
+   * @param {string} [lang] - Language to use for the string
+   * @param {Array&lt;*>} [args] - Arguments to pass to the string if needed
+   * @returns {string}
+   */
+  resolve(id, lang, ...args) {
+    if (typeof id !== 'string') throw new TypeError('ID must be a string');
+    if (typeof lang !== 'string') lang = this.client.lang;
+
+    const language = this.languages.get(lang);
+    if (!language) throw new Error(`Language ${lang} is not registered`);
+    let string = language.strings.get(id);
+    if (!string) return id;
+    string = string.content;
+    if (typeof string === 'string') return string;
+    if (typeof string === 'function') return string(...args);
+    throw new Error(`Unsupported type for language strings: ${typeof string}`);
+  }
+}
+
+module.exports = LanguageRegistry;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-Channel.html">Channel</a></li><li><a href="external-Client.html">Client</a></li><li><a href="external-ClientOptions.html">ClientOptions</a></li><li><a href="external-Collection.html">Collection</a></li><li><a href="external-DMChannel.html">DMChannel</a></li><li><a href="external-Emoji.html">Emoji</a></li><li><a href="external-GroupDMChannel.html">GroupDMChannel</a></li><li><a href="external-Guild.html">Guild</a></li><li><a href="external-GuildMember.html">GuildMember</a></li><li><a href="external-GuildResolvable.html">GuildResolvable</a></li><li><a href="external-Message.html">Message</a></li><li><a href="external-MessageAttachment.html">MessageAttachment</a></li><li><a href="external-MessageEmbed.html">MessageEmbed</a></li><li><a href="external-MessageOptions.html">MessageOptions</a></li><li><a href="external-MessageReaction.html">MessageReaction</a></li><li><a href="external-ReactionEmoji.html">ReactionEmoji</a></li><li><a href="external-RequireAllOptions.html">RequireAllOptions</a></li><li><a href="external-Role.html">Role</a></li><li><a href="external-ShardingManager.html">ShardingManager</a></li><li><a href="external-SQLiteDatabase.html">SQLiteDatabase</a></li><li><a href="external-StringResolvable.html">StringResolvable</a></li><li><a href="external-TextChannel.html">TextChannel</a></li><li><a href="external-User.html">User</a></li><li><a href="external-UserResolvable.html">UserResolvable</a></li><li><a href="external-Webhook.html">Webhook</a></li></ul><h3>Classes</h3><ul><li><a href="Argument.html">Argument</a></li><li><a href="ArgumentCollector.html">ArgumentCollector</a></li><li><a href="ArgumentType.html">ArgumentType</a></li><li><a href="ArgumentUnionType.html">ArgumentUnionType</a></li><li><a href="Client.html">Client</a></li><li><a href="Command.html">Command</a></li><li><a href="CommandDispatcher.html">CommandDispatcher</a></li><li><a href="CommandFormatError.html">CommandFormatError</a></li><li><a href="CommandGroup.html">CommandGroup</a></li><li><a href="CommandMessage.html">CommandMessage</a></li><li><a href="CommandRegistry.html">CommandRegistry</a></li><li><a href="FriendlyError.html">FriendlyError</a></li><li><a href="GuildExtension.html">GuildExtension</a></li><li><a href="GuildSettingsHelper.html">GuildSettingsHelper</a></li><li><a href="Language.html">Language</a></li><li><a href="LanguageRegistry.html">LanguageRegistry</a></li><li><a href="LanguageString.html">LanguageString</a></li><li><a href="SettingsProvider.html">SettingsProvider</a></li><li><a href="SQLiteProvider.html">SQLiteProvider</a></li></ul><h3>Events</h3><ul><li><a href="Client.html#event:commandBlocked">commandBlocked</a></li><li><a href="Client.html#event:commandError">commandError</a></li><li><a href="Client.html#event:commandPrefixChange">commandPrefixChange</a></li><li><a href="Client.html#event:commandRegister">commandRegister</a></li><li><a href="Client.html#event:commandReregister">commandReregister</a></li><li><a href="Client.html#event:commandRun">commandRun</a></li><li><a href="Client.html#event:commandStatusChange">commandStatusChange</a></li><li><a href="Client.html#event:commandUnregister">commandUnregister</a></li><li><a href="Client.html#event:groupRegister">groupRegister</a></li><li><a href="Client.html#event:groupStatusChange">groupStatusChange</a></li><li><a href="Client.html#event:languageChange">languageChange</a></li><li><a href="Client.html#event:languageRegister">languageRegister</a></li><li><a href="Client.html#event:languageStringRegister">languageStringRegister</a></li><li><a href="Client.html#event:providerReady">providerReady</a></li><li><a href="Client.html#event:typeRegister">typeRegister</a></li><li><a href="Client.html#event:unknownCommand">unknownCommand</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Apr 18 2018 15:15:41 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

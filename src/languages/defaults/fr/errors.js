@@ -29,6 +29,7 @@ module.exports = {
     `Vous ne pouvez plus utiliser la commande \`${command.name}\` pendant encore ${time.toFixed(1)} secondes.`,
 
   // Other errors
+  UNKNOWN_ERROR: (usage) => `Commande inconnue. Utilisez ${usage} pour voir la liste de toutes les commandes.`,
   UNEXPECTED_ERROR: (error, ownerList, invite) =>
     stripIndents`
       Une erreur est survenue en exécutant la commande : \`${error.name}: ${error.message}\`

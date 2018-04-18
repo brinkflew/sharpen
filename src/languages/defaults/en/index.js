@@ -130,8 +130,12 @@ module.exports = {
   CMD_MISSING_USER_PERMISSION_ERROR: errors.MISSING_PERMISSION,
   CMD_MISSING_USER_PERMISSIONS_ERROR: errors.MISSING_PERMISSIONS,
   CMD_THROTTLED_ERROR: errors.THROTTLED,
+  CMD_UNKNOWN_ERROR: errors.UNKNOWN_ERROR,
   CMD_UNEXPECTED_ERROR: errors.UNEXPECTED_ERROR,
-  CMD_FORMAT_ERROR: errors.FORMAT_ERROR
+  CMD_FORMAT_ERROR: errors.FORMAT_ERROR,
+
+  // Generic translation stuff, usually parts of strings
+  GENERIC_OR: 'or'
 };
 
 /* eslint-enable max-len */

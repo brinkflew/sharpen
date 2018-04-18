@@ -1,5 +1,8 @@
 # Packages
-node_modules/
+node_modules
+
+# Documentation
+docs
 
 # Logs
 npm-debug.log*

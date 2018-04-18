@@ -483,7 +483,10 @@ class CommandMessage {
    */
   translate(id, ...args) {
     const lang = this.message.guild ? this.message.guild.lang : this.client.lang;
-    return this.client.translator.resolve(id, lang, ...args);
+    const translated = this.client.translator
+      .resolve(id, lang, ...args)
+      .replace(/\sor\s/g, ` ${this.client.translator.resolve('GENERIC_OR', lang)} `);
+    return translated;
   }
 
   /**
