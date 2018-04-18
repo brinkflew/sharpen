@@ -51,6 +51,7 @@ else
   if [[ "$SOURCE" == master ]]; then
     echo -e "\e[36m\e[1mDockerizing branch \"${TRAVIS_BRANCH}\"."
     dockerize "$SOURCE"
+  fi
 fi
 
 # Generate documentation and push it to GitHub
