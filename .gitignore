@@ -1,6 +1,9 @@
 # Packages
-node_modules/
+node_modules
 package-lock.json
+
+# Documentation
+docs
 
 # Tests
 test/config.json
@@ -9,3 +12,6 @@ test/*.sqlite3
 
 # Docker
 docker-compose.yml
+
+# Deploy
+deploy/deploy_key.pem

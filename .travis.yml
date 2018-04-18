@@ -8,6 +8,8 @@ cache:
   directories:
     - node_modules
 before_install:
+  - openssl aes-256-cbc -K $encrypted_2537babbf80b_key -iv $encrypted_2537babbf80b_iv
+  -in deploy\\deploy_key.enc -out deploy\\deploy_key.pem -d
   - npm install -g eslint
 install: npm install
 script:
@@ -15,4 +17,5 @@ script:
 dist: trusty
 env:
   global:
-    - COMMIT_AUTHOR_EMAIL: 'antoine.van-serveyt@hotmail.be'
+    - ENCRYPTION_LABEL: 2537babbf80b
+    - COMMIT_AUTHOR_EMAIL: antoine.van-serveyt@hotmail.be

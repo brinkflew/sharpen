@@ -1,12 +1,14 @@
 {
   "name": "sharpen",
-  "version": "0.0.1-dev",
+  "version": "0.0.1-docs",
   "description": "Efficient, highly customisable framework for creating powerful Discord bots based on discord.js",
   "main": "index.js",
   "scripts": {
     "test": "npm run lint",
     "lint": "eslint src",
-    "lint:fix": "eslint src --fix"
+    "lint:fix": "eslint src --fix",
+    "docs": "jsdoc -d docs/ -r src/",
+    "docs:view": "npm run docs && http-server docs"
   },
   "repository": {
     "type": "git",
@@ -36,9 +38,9 @@
     "zlib-sync": "^0.1.4"
   },
   "devDependencies": {
+    "@types/node": "^9.6.5",
     "eslint": "^4.19.1",
     "jsdoc": "^3.5.5",
-    "@types/node": "^9.6.5",
     "typescript": "^2.8.1"
   },
   "optionalDependencies": {

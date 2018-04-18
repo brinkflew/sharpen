@@ -1,8 +1,20 @@
 # Packages
-node_modules/
+node_modules
 
-# Miscellaneous
-.git/
+# Git
+.git
 .gitignore
 .gitattributes
-test/
+
+# Docker
+.dockerignore
+docker-compose*.yml
+Dockerfile
+
+# Travis CI
+.travis.yml
+
+# Folders
+deploy
+docs
+test
