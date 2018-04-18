@@ -16,5 +16,4 @@ script:
 dist: trusty
 env:
   global:
-    - ENCRYPTION_LABEL: '2537babbf80b'
     - COMMIT_AUTHOR_EMAIL: 'antoine.van-serveyt@hotmail.be'

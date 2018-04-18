@@ -58,6 +58,17 @@ fi
 echo -e "\e[36m\e[1mGenerating documentation for \"${SOURCE}\"."
 gendoc
 
+# Decrypt and add the ssh key
+echo -e "\e[36m\e[1mDecrypting SSH key."
+# ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
+# ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
+# ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
+# ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
+# openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy/deploy_key.enc -out deploy/deploy_key.pem -d
+chmod 600 deploy/deploy_key.pem
+eval `ssh-agent -s`
+ssh-add deploy/deploy_key.pem
+
 # Initialise some useful variables
 REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
@@ -72,17 +83,6 @@ cd ..
 
 # Clean out existing contents
 rm -rf out/**/* || exit 0
-
-# Decrypt and add the ssh key
-echo -e "\e[36m\e[1mDecrypting SSH key."
-# ENCRYPTED_KEY_VAR="encrypted_${ENCRYPTION_LABEL}_key"
-# ENCRYPTED_IV_VAR="encrypted_${ENCRYPTION_LABEL}_iv"
-# ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
-# ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
-# openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy/deploy_key.enc -out deploy/deploy_key.pem -d
-chmod 600 deploy/deploy_key.pem
-eval `ssh-agent -s`
-ssh-add deploy/deploy_key.pem
 
 # Checkout the repo in the target branch so we can build docs and push to it
 TARGET_BRANCH="docs"
