@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: arguments/Argument.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: arguments/Argument.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { stripIndents } = require('common-tags');
+const { escapeMarkdown } = require('discord.js');
+const ArgumentUnionType = require('./defaults/UnionArgumentType');
+
+/** A fancy argument */
+class Argument {
+  /**
+	 * @typedef {Object} ArgumentInfo
+	 * @property {string} key - Key for the argument
+	 * @property {string} [label=key] - Label for the argument
+	 * @property {string} prompt - First prompt for the argument when it wasn't specified
+	 * @property {string} [error] - Predefined error message to output for the argument when it isn't valid
+	 * @property {string} [type] - Type of the argument (must be the ID of one of the registered argument types
+	 * or multiple IDs in order of priority separated by `|` for a union type - see
+	 * {@link CommandRegistry#registerDefaultTypes} for the built-in types)
+	 * @property {number} [max] - If type is `integer` or `float`, this is the maximum value of the number.
+	 * If type is `string`, this is the maximum length of the string.
+	 * @property {number} [min] - If type is `integer` or `float`, this is the minimum value of the number.
+	 * If type is `string`, this is the minimum length of the string.
+	 * @property {ArgumentDefault} [default] - Default value for the argument (makes the arg optional - cannot be `null`)
+	 * @property {string[]} [oneOf] - An array of values that are allowed to be used
+	 * @property {boolean} [infinite=false] - Whether the argument accepts infinite values
+	 * @property {Function} [validate] - Validator function for the argument (see {@link ArgumentType#validate})
+	 * @property {Function} [parse] - Parser function for the argument (see {@link ArgumentType#parse})
+	 * @property {Function} [isEmpty] - Empty checker for the argument (see {@link ArgumentType#isEmpty})
+	 * @property {number} [wait=30] - How long to wait for input (in seconds)
+	 */
+
+  /**
+	 * Either a value or a function that returns a value. The function is passed the CommandMessage and the Argument.
+	 * @typedef {*|Function} ArgumentDefault
+	 */
+
+  /**
+	 * @param {Client} client - Client the argument is for
+	 * @param {ArgumentInfo} info - Information for the command argument
+	 */
+  constructor(client, info) {
+    this.constructor.validateInfo(client, info);
+
+    /**
+		 * Key for the argument
+		 * @type {string}
+		 */
+    this.key = info.key;
+
+    /**
+		 * Label for the argument
+		 * @type {string}
+		 */
+    this.label = info.label || info.key;
+
+    /**
+		 * Question prompt for the argument
+		 * @type {string}
+		 */
+    this.prompt = info.prompt;
+
+    /**
+		 * Error message for when a value is invalid
+		 * @type {?string}
+		 */
+    this.error = info.error || null;
+
+    /**
+		 * Type of the argument
+		 * @type {?ArgumentType}
+		 */
+    this.type = this.constructor.determineType(client, info.type);
+
+    /**
+		 * If type is `integer` or `float`, this is the maximum value of the number.
+		 * If type is `string`, this is the maximum length of the string.
+		 * @type {?number}
+		 */
+    this.max = typeof info.max !== 'undefined' ? info.max : null;
+
+    /**
+		 * If type is `integer` or `float`, this is the minimum value of the number.
+		 * If type is `string`, this is the minimum length of the string.
+		 * @type {?number}
+		 */
+    this.min = typeof info.min !== 'undefined' ? info.min : null;
+
+    /**
+		 * The default value for the argument
+		 * @type {?ArgumentDefault}
+		 */
+    this.default = typeof info.default !== 'undefined' ? info.default : null;
+
+    /**
+		 * Values the user can choose from
+		 * If type is `string`, this will be case-insensitive
+		 * If type is `channel`, `member`, `role`, or `user`, this will be the IDs.
+		 * @type {?string[]}
+		 */
+    this.oneOf = typeof info.oneOf !== 'undefined' ? info.oneOf : null;
+
+    /**
+		 * Whether the argument accepts an infinite number of values
+		 * @type {boolean}
+		 */
+    this.infinite = Boolean(info.infinite);
+
+    /**
+		 * Validator function for validating a value for the argument
+		 * @type {?Function}
+		 * @see {@link ArgumentType#validate}
+		 */
+    this.validator = info.validate || null;
+
+    /**
+		 * Parser function for parsing a value for the argument
+		 * @type {?Function}
+		 * @see {@link ArgumentType#parse}
+		 */
+    this.parser = info.parse || null;
+
+    /**
+		 * Function to check whether a raw value is considered empty
+		 * @type {?Function}
+		 * @see {@link ArgumentType#isEmpty}
+		 */
+    this.emptyChecker = info.isEmpty || null;
+
+    /**
+		 * How long to wait for input (in seconds)
+		 * @type {number}
+		 */
+    this.wait = typeof info.wait !== 'undefined' ? info.wait : 30;
+  }
+
+  /**
+	 * Result object from obtaining a single {@link Argument}'s value(s)
+	 * @typedef {Object} ArgumentResult
+	 * @property {?*|?Array&lt;*>} value - Final value(s) for the argument
+	 * @property {?string} cancelled - One of:
+	 * - `user` (user cancelled)
+	 * - `time` (wait time exceeded)
+	 * - `promptLimit` (prompt limit exceeded)
+	 * @property {Message[]} prompts - All messages that were sent to prompt the user
+	 * @property {Message[]} answers - All of the user's messages that answered a prompt
+	 */
+
+  /**
+	 * Prompts the user and obtains the value for the argument
+	 * @param {CommandMessage} msg - Message that triggered the command
+	 * @param {string} [val] - Pre-provided value for the argument
+	 * @param {number} [promptLimit=Infinity] - Maximum number of times to prompt for the argument
+	 * @returns {Promise&lt;ArgumentResult>}
+	 */
+  async obtain(msg, val, promptLimit = Infinity) {
+    let empty = this.isEmpty(val, msg);
+    if (empty &amp;&amp; this.default !== null) {
+      return {
+        value: typeof this.default === 'function' ? await this.default(msg, this) : this.default,
+        cancelled: null,
+        prompts: [],
+        answers: []
+      };
+    }
+    if (this.infinite) return this.obtainInfinite(msg, val, promptLimit);
+
+    const wait = this.wait > 0 &amp;&amp; this.wait !== Infinity ? this.wait * 1000 : undefined;
+    const prompts = [];
+    const answers = [];
+    let valid = !empty ? await this.validate(val, msg) : false;
+
+    while (!valid || typeof valid === 'string') {
+      /* eslint-disable no-await-in-loop */
+      if (prompts.length >= promptLimit) {
+        return {
+          value: null,
+          cancelled: 'promptLimit',
+          prompts,
+          answers
+        };
+      }
+
+      // Prompt the user for a new value
+      const prompt = msg.translate(this.prompt);
+      prompts.push(await msg.reply(stripIndents`
+				${empty ? prompt : valid ? msg.translate(valid) : msg.translate('PROMPT_INVALID_ARG', this.label)}
+				${msg.translate('PROMPT_CANCEL', wait, this.wait)}
+			`));
+
+      // Get the user's response
+      const responses = await msg.channel.awaitMessages((msg2) => msg2.author.id === msg.author.id, {
+        max: 1,
+        time: wait
+      });
+
+      // Make sure they actually answered
+      if (responses &amp;&amp; responses.size === 1) {
+        answers.push(responses.first());
+        val = answers[answers.length - 1].content;
+      } else {
+        return {
+          value: null,
+          cancelled: 'time',
+          prompts,
+          answers
+        };
+      }
+
+      // See if they want to cancel
+      if (val.toLowerCase() === 'cancel') {
+        return {
+          value: null,
+          cancelled: 'user',
+          prompts,
+          answers
+        };
+      }
+
+      empty = this.isEmpty(val, msg);
+      valid = await this.validate(val, msg);
+      /* eslint-enable no-await-in-loop */
+    }
+
+    return {
+      value: await this.parse(val, msg),
+      cancelled: null,
+      prompts,
+      answers
+    };
+  }
+
+  /**
+	 * Prompts the user and obtains multiple values for the argument
+	 * @param {CommandMessage} msg - Message that triggered the command
+	 * @param {string[]} [vals] - Pre-provided values for the argument
+	 * @param {number} [promptLimit=Infinity] - Maximum number of times to prompt for the argument
+	 * @returns {Promise&lt;ArgumentResult>}
+	 * @private
+	 */
+  async obtainInfinite(msg, vals, promptLimit = Infinity) { // eslint-disable-line complexity
+    const wait = this.wait > 0 &amp;&amp; this.wait !== Infinity ? this.wait * 1000 : undefined;
+    const results = [];
+    const prompts = [];
+    const answers = [];
+    let currentVal = 0;
+
+    while (true) { // eslint-disable-line no-constant-condition
+      /* eslint-disable no-await-in-loop */
+      let val = vals &amp;&amp; vals[currentVal] ? vals[currentVal] : null;
+      let valid = val ? await this.validate(val, msg) : false;
+      let attempts = 0;
+
+      while (!valid || typeof valid === 'string') {
+        attempts++;
+        if (attempts > promptLimit) {
+          return {
+            value: null,
+            cancelled: 'promptLimit',
+            prompts,
+            answers
+          };
+        }
+
+        // Prompt the user for a new value
+        if (val) {
+          const escaped = escapeMarkdown(val).replace(/@/g, '@\u200b');
+          prompts.push(await msg.reply(stripIndents`
+						${valid ? msg.translate(valid) : msg.translate('PROMPT_INFINITE_INVALID_ARG', this.label, escaped)}
+						${msg.translate('PROMPT_INFINITE_CANCEL', wait, this.wait)}
+					`));
+        } else if (results.length === 0) {
+          prompts.push(await msg.reply(stripIndents`
+						${msg.translate(this.prompt)}
+						${msg.translate('PROMPT_INFINITE_CANCEL', wait, this.wait)}
+					`));
+        }
+
+        // Get the user's response
+        const responses = await msg.channel.awaitMessages((msg2) => msg2.author.id === msg.author.id, {
+          max: 1,
+          time: wait
+        });
+
+        // Make sure they actually answered
+        if (responses &amp;&amp; responses.size === 1) {
+          answers.push(responses.first());
+          val = answers[answers.length - 1].content;
+        } else {
+          return {
+            value: null,
+            cancelled: 'time',
+            prompts,
+            answers
+          };
+        }
+
+        // See if they want to finish or cancel
+        const lc = val.toLowerCase();
+        if (lc === 'finish') {
+          return {
+            value: results.length > 0 ? results : null,
+            cancelled: results.length > 0 ? null : 'user',
+            prompts,
+            answers
+          };
+        }
+        if (lc === 'cancel') {
+          return {
+            value: null,
+            cancelled: 'user',
+            prompts,
+            answers
+          };
+        }
+
+        valid = await this.validate(val, msg);
+      }
+
+      results.push(await this.parse(val, msg));
+
+      if (vals) {
+        currentVal++;
+        if (currentVal === vals.length) {
+          return {
+            value: results,
+            cancelled: null,
+            prompts,
+            answers
+          };
+        }
+      }
+      /* eslint-enable no-await-in-loop */
+    }
+  }
+
+  /**
+	 * Checks if a value is valid for the argument
+	 * @param {string} val - Value to check
+	 * @param {CommandMessage} msg - Message that triggered the command
+	 * @returns {boolean|string|Promise&lt;boolean|string>}
+	 */
+  validate(val, msg) {
+    const valid = this.validator ? this.validator(val, msg, this) : this.type.validate(val, msg, this);
+    if (!valid || typeof valid === 'string') return this.error || valid;
+    if (valid instanceof Promise) return valid.then((vld) => !vld || typeof vld === 'string' ? this.error || vld : vld);
+    return valid;
+  }
+
+  /**
+	 * Parses a value string into a proper value for the argument
+	 * @param {string} val - Value to parse
+	 * @param {CommandMessage} msg - Message that triggered the command
+	 * @returns {*|Promise&lt;*>}
+	 */
+  parse(val, msg) {
+    if (this.parser) return this.parser(val, msg, this);
+    return this.type.parse(val, msg, this);
+  }
+
+  /**
+	 * Checks whether a value for the argument is considered to be empty
+	 * @param {string} val - Value to check for emptiness
+	 * @param {CommandMessage} msg - Message that triggered the command
+	 * @returns {boolean}
+	 */
+  isEmpty(val, msg) {
+    if (this.emptyChecker) return this.emptyChecker(val, msg, this);
+    if (this.type) return this.type.isEmpty(val, msg, this);
+    return !val;
+  }
+
+  /**
+	 * Validates the constructor parameters
+	 * @param {Client} client - Client to validate
+	 * @param {ArgumentInfo} info - Info to validate
+	 * @private
+	 */
+  static validateInfo(client, info) { // eslint-disable-line complexity
+    if (!client) throw new Error('The argument client must be specified.');
+    if (typeof info !== 'object') throw new TypeError('Argument info must be an Object.');
+    if (typeof info.key !== 'string') throw new TypeError('Argument key must be a string.');
+    if (info.label &amp;&amp; typeof info.label !== 'string') throw new TypeError('Argument label must be a string.');
+    if (typeof info.prompt !== 'string') throw new TypeError('Argument prompt must be a string.');
+    if (info.error &amp;&amp; typeof info.error !== 'string') throw new TypeError('Argument error must be a string.');
+    if (info.type &amp;&amp; typeof info.type !== 'string') throw new TypeError('Argument type must be a string.');
+    if (info.type &amp;&amp; !info.type.includes('|') &amp;&amp; !client.registry.types.has(info.type)) {
+      throw new RangeError(`Argument type "${info.type}" isn't registered.`);
+    }
+    if (!info.type &amp;&amp; !info.validate) {
+      throw new Error('Argument must have either "type" or "validate" specified.');
+    }
+    if (info.validate &amp;&amp; typeof info.validate !== 'function') {
+      throw new TypeError('Argument validate must be a function.');
+    }
+    if (info.parse &amp;&amp; typeof info.parse !== 'function') {
+      throw new TypeError('Argument parse must be a function.');
+    }
+    if (!info.type &amp;&amp; (!info.validate || !info.parse)) {
+      throw new Error('Argument must have both validate and parse since it doesn\'t have a type.');
+    }
+    if (typeof info.wait !== 'undefined' &amp;&amp; (typeof info.wait !== 'number' || Number.isNaN(info.wait))) {
+      throw new TypeError('Argument wait must be a number.');
+    }
+  }
+
+  /**
+	 * Gets the argument type to use from an ID
+	 * @param {Client} client - Client to use the registry of
+	 * @param {string} id - ID of the type to use
+	 * @returns {?ArgumentType}
+	 * @private
+	 */
+  static determineType(client, id) {
+    if (!id) return null;
+    if (!id.includes('|')) return client.registry.types.get(id);
+
+    let type = client.registry.types.get(id);
+    if (type) return type;
+    type = new ArgumentUnionType(client, id);
+    client.registry.registerType(type);
+    return type;
+  }
+}
+
+module.exports = Argument;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-Channel.html">Channel</a></li><li><a href="external-Client.html">Client</a></li><li><a href="external-ClientOptions.html">ClientOptions</a></li><li><a href="external-Collection.html">Collection</a></li><li><a href="external-DMChannel.html">DMChannel</a></li><li><a href="external-Emoji.html">Emoji</a></li><li><a href="external-GroupDMChannel.html">GroupDMChannel</a></li><li><a href="external-Guild.html">Guild</a></li><li><a href="external-GuildMember.html">GuildMember</a></li><li><a href="external-GuildResolvable.html">GuildResolvable</a></li><li><a href="external-Message.html">Message</a></li><li><a href="external-MessageAttachment.html">MessageAttachment</a></li><li><a href="external-MessageEmbed.html">MessageEmbed</a></li><li><a href="external-MessageOptions.html">MessageOptions</a></li><li><a href="external-MessageReaction.html">MessageReaction</a></li><li><a href="external-ReactionEmoji.html">ReactionEmoji</a></li><li><a href="external-RequireAllOptions.html">RequireAllOptions</a></li><li><a href="external-Role.html">Role</a></li><li><a href="external-ShardingManager.html">ShardingManager</a></li><li><a href="external-SQLiteDatabase.html">SQLiteDatabase</a></li><li><a href="external-StringResolvable.html">StringResolvable</a></li><li><a href="external-TextChannel.html">TextChannel</a></li><li><a href="external-User.html">User</a></li><li><a href="external-UserResolvable.html">UserResolvable</a></li><li><a href="external-Webhook.html">Webhook</a></li></ul><h3>Classes</h3><ul><li><a href="Argument.html">Argument</a></li><li><a href="ArgumentCollector.html">ArgumentCollector</a></li><li><a href="ArgumentType.html">ArgumentType</a></li><li><a href="ArgumentUnionType.html">ArgumentUnionType</a></li><li><a href="Client.html">Client</a></li><li><a href="Command.html">Command</a></li><li><a href="CommandDispatcher.html">CommandDispatcher</a></li><li><a href="CommandFormatError.html">CommandFormatError</a></li><li><a href="CommandGroup.html">CommandGroup</a></li><li><a href="CommandMessage.html">CommandMessage</a></li><li><a href="CommandRegistry.html">CommandRegistry</a></li><li><a href="FriendlyError.html">FriendlyError</a></li><li><a href="GuildExtension.html">GuildExtension</a></li><li><a href="GuildSettingsHelper.html">GuildSettingsHelper</a></li><li><a href="Language.html">Language</a></li><li><a href="LanguageRegistry.html">LanguageRegistry</a></li><li><a href="LanguageString.html">LanguageString</a></li><li><a href="SettingsProvider.html">SettingsProvider</a></li><li><a href="SQLiteProvider.html">SQLiteProvider</a></li></ul><h3>Events</h3><ul><li><a href="Client.html#event:commandBlocked">commandBlocked</a></li><li><a href="Client.html#event:commandError">commandError</a></li><li><a href="Client.html#event:commandPrefixChange">commandPrefixChange</a></li><li><a href="Client.html#event:commandRegister">commandRegister</a></li><li><a href="Client.html#event:commandReregister">commandReregister</a></li><li><a href="Client.html#event:commandRun">commandRun</a></li><li><a href="Client.html#event:commandStatusChange">commandStatusChange</a></li><li><a href="Client.html#event:commandUnregister">commandUnregister</a></li><li><a href="Client.html#event:groupRegister">groupRegister</a></li><li><a href="Client.html#event:groupStatusChange">groupStatusChange</a></li><li><a href="Client.html#event:languageChange">languageChange</a></li><li><a href="Client.html#event:languageRegister">languageRegister</a></li><li><a href="Client.html#event:languageStringRegister">languageStringRegister</a></li><li><a href="Client.html#event:providerReady">providerReady</a></li><li><a href="Client.html#event:typeRegister">typeRegister</a></li><li><a href="Client.html#event:unknownCommand">unknownCommand</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Apr 18 2018 15:15:41 GMT+0000 (UTC)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
