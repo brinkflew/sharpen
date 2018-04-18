@@ -68,16 +68,16 @@ if [ -d out ]; then
 fi
 
 # Clone the existing GitHub pages for this repo into out
-TARGET_BRANCH="$SOURCE"
+TARGET_BRANCH="docs"
 git clone $REPO out
 cd out
 git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
 cd ..
 
 # Clean out existing contents
-if [ -d out/docs ]; then
-  rm -Rf out/docs
-fi
+cp out/README.md README.md.backup
+rm -Rf out/*
+cp README.md.backup out/README.md
 
 # Move the generated doc files to the newly-checked-out repo
 mv docs out
@@ -85,7 +85,7 @@ mv docs out
 # Commit and push
 echo -e "\e[36m\e[1mPushing documentation to \"${TARGET_BRANCH}\"."
 cd out
-git add .
+git add -A .
 git config user.name "Travis CI"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
 git commit -m "Docs build for ${SOURCE_TYPE} ${SOURCE}: ${SHA}" || true
