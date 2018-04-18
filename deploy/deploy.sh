@@ -65,9 +65,9 @@ echo -e "\e[36m\e[1mDecrypting SSH key."
 # ENCRYPTED_KEY=${!ENCRYPTED_KEY_VAR}
 # ENCRYPTED_IV=${!ENCRYPTED_IV_VAR}
 # openssl aes-256-cbc -K $ENCRYPTED_KEY -iv $ENCRYPTED_IV -in deploy/deploy_key.enc -out deploy/deploy_key.pem -d
-chmod 600 deploy/deploy_key.pem
+chmod 600 deploy/deploy_key
 eval `ssh-agent -s`
-ssh-add deploy/deploy_key.pem
+ssh-add deploy/deploy_key
 
 # Initialise some useful variables
 REPO=`git config remote.origin.url`

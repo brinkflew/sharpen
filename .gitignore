@@ -14,4 +14,4 @@ test/*.sqlite3
 docker-compose.yml
 
 # Deploy
-deploy/deploy_key.pem
+deploy/deploy_key
