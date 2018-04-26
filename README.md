@@ -1,7 +1,7 @@
 <div align="center">
 	<br />
 	<p>
-		<a href="https://github.com/brinkflew/sharpen/tree/dev#readme"><img src="" width="546" alt="Sharpen" /></a>
+		<a href="https://github.com/brinkflew/sharpen/tree/master#readme"><img src="" width="546" alt="Sharpen" /></a>
 	</p>
 	<br />
 	<p>
