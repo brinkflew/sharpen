@@ -50,8 +50,10 @@ else
   SOURCE_TYPE="branch"
 
   # Dockerize the master branch
+  echo -e "\e[36m\e[1mDockerizing branch \"${TRAVIS_BRANCH}\"."
   if [[ "$SOURCE" == master ]]; then
-    echo -e "\e[36m\e[1mDockerizing branch \"${TRAVIS_BRANCH}\"."
+    dockerize "latest"
+  else
     dockerize "$SOURCE"
   fi
 fi
