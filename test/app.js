@@ -69,10 +69,6 @@ client.registry
   .registerGroup('test', 'Testing')
   .registerGroup('math', 'Math')
   .registerCommandsIn(path.join(__dirname, 'commands'));
-//
-// .registerGroup('math', 'Math')
-// .registerTypesIn(path.join(__dirname, 'types'))
-// .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.translator
   .registerDefaults()

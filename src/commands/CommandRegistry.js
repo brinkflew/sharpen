@@ -477,13 +477,13 @@ class CommandRegistry {
 	 * @returns {Command[]} All commands that are found
 	 */
   findCommands(searchString = null, exact = false, message = null) {
-    if (!searchString) return message ? this.commands.filterArray((cmd) => cmd.isUsable(message)) : this.commands;
+    if (!searchString) return message ? this.commands.filter((cmd) => cmd.isUsable(message)).array() : this.commands;
 
     // Find all matches
     const lcSearch = searchString.toLowerCase();
-    const matchedCommands = this.commands.filterArray(
+    const matchedCommands = this.commands.filter(
       exact ? commandFilterExact(lcSearch) : commandFilterInexact(lcSearch)
-    );
+    ).array();
     if (exact) return matchedCommands;
 
     // See if there's an exact match
