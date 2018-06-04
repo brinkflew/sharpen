@@ -21,6 +21,11 @@ module.exports = {
     `,
   SET: (lang) => `La langue a été changée vers \`${lang}\`.`,
   RESET: (current) => `La langue a été réinitialisée à sa valeur par défaut (avant : ${current}).`,
+  UNKNOWN: (lang, list) =>
+    oneLine`
+      La langue \`${lang}\` n'est pas disponnible.
+      Veuillez choisir une autre langue parmi les suivantes: ${list}
+    `,
   ADMIN_ONLY: () => `Seuls les administrateurs peuvent modifier la langue.`,
   OWNER_ONLY: () => `Seuls les propriétaires du bot peuvent modifier la langue par défaut.`
 };
